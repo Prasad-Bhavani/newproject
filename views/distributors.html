@@ -1,0 +1,133 @@
+<section class="content">
+    <div class="container-fluid">
+        <!-- TRADERS List -->
+        <div class="row clearfix fade-element-in" ng-if="isDistributors">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                <div class="header table-head">
+                    <h2>
+                        Traders <span class="badge bg-cyan badgeright" ng-click="addDistributor()">Add Trader</span>
+                    </h2>
+                </div>
+                 <div class="table-responsive table-bordered ng-table-settings">
+                     <table ng-table="tableParams" class="table" show-filter="true">
+                        <tr ng-repeat="distributor in $data" ng-if="$data.length>0">
+                            <td title="'Sl.No'" sortable="'sno'">{{distributor.sno}}.</td>
+                            <td data-title="'Trader Name'" sortable="'distributor_name'" filter="{ 'distributor_name': 'text' }">{{ distributor.distributor_name }}</td>
+                            <td data-title="'Contact Number'" sortable="'contact_no_1'" filter="{ 'contact_no': 'text' }">{{ distributor.contact_no }}</td>
+                            <td data-title="'City Name'" sortable="'city'" filter="{ 'city': 'text' }">{{ distributor.city }}</td>
+                            <td data-title="'Address'" sortable="'address'" filter="{ 'address': 'text' }">{{ distributor.address }}</td>
+                            <td data-title="'Action'" align="center">
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn waves-effect dropdown-toggle btn-info btnsmall" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" ng-class="{' btn-primary':distributor.status=='Active','btn-danger':distributor.status=='Inactive'}" style="padding: 1px !important">
+                                    {{distributor.status==1 ? '&nbsp; Active &nbsp;' : 'Inactive'}} <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1">
+                                    <li ng-if="distributor.status=='0'" ng-click="changeStatus(distributor.id,1)"><a href="javascript:void(0);" class=" waves-effect waves-block">Active</a></li>
+                                    <li ng-if="distributor.status=='1'"><a href="javascript:void(0);" class=" waves-effect waves-block" ng-click="changeStatus(distributor.id,0)">Inactive</a></li>
+                                </ul>
+                            </div> <button type="button" class="btn btn-primary btnsmall" ng-click="getDistributor(distributor.id)">Edit</button></td>
+                        </tr>
+                        <tr>
+                            <td colspan="7" align="center" ng-if="$data.length==0">No Records Found...</td>
+                        </tr>
+                     </table>
+                 </div>
+                </div>
+            </div>
+        </div>
+        <!-- RETAILERS List -->
+
+        <!-- Add Trader -->
+        <div class="row clearfix fade-element-in" ng-if="!isDistributors">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                <div class="header headerborder">
+                    <h2>
+                        Add Trader <span class="badge bg-cyan badgeright" ng-click="getDistributors()">View Traders</span>
+                    </h2>
+                </div>
+                 <div class="body">
+                     <div class="row clearfix">
+                     <form method="post" name="distributorForm" id="distributorForm" class="col-sm-offset-1" novalidate autocomplete="off" ng-submit="subForm(distributorForm.$valid)">
+                         <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label labelrt col-sm-4">Trader Name</label>
+                                <div class="col-sm-4">
+                                <div class="form-line" ng-class="{'error':(submitted && distributorForm.distributor_name.$error.required) || (submitted && distributorForm.distributor_name.$error.pattern)}">
+                                    <input type="text" name="distributor_name" class="form-control" id="distributor_name" ng-model="obj.distributor_name" placeholder="Enter Trader Name" ng-required="true" />
+                                    </div>
+                                <p ng-if="submitted && distributorForm.distributor_name.$error.required" class="haserror">Enter Trader Name</p>
+                                </div>
+                            </div>
+                          </div>
+
+                         <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label labelrt col-sm-4">Contact Number</label>
+                                <div class="col-sm-4">
+                                <div class="form-line" ng-class="{'error':submitted && (distributorForm.contact_no.$error.required || distributorForm.contact_no.$error.pattern)}">
+                                    <input type="text" name="contact_no" class="form-control" id="contact_no" ng-model="obj.contact_no" placeholder="Enter Contact Number" ng-pattern="/^[0-9]{10}$/" ng-required="true" />
+                                    </div>
+                                <p ng-if="submitted && distributorForm.contact_no.$error.required" class="haserror">Enter Contact Number</p>
+                                <p ng-if="submitted && distributorForm.contact_no.$error.pattern" class="haserror">Enter valid Number</p>
+                                </div>
+                            </div>
+                          </div>
+
+                         <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label labelrt col-sm-4">Alternative Numbers Separated by comma(,)</label>
+                                <div class="col-sm-4">
+                                <div class="form-line" ng-class="{'error':submitted && (distributorForm.alternative_nos.$error.required || distributorForm.alternative_nos.$error.pattern)}">
+                                    <input type="text" name="alternative_nos" class="form-control" id="alternative_nos" ng-model="obj.alternative_nos" placeholder="Enter Alternative Number" />
+                                    </div>
+                                <p ng-if="submitted && distributorForm.alternative_nos.$error.required" class="haserror">Enter Alternative Number</p>
+                                </div>
+                            </div>
+                          </div>
+                         <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label labelrt col-sm-4">City Name</label>
+                                <div class="col-sm-4">
+                                <div class="form-line" ng-class="{'error':submitted && distributorForm.city.$error.required}">
+                                    <input type="text" name="city" class="form-control" id="city" ng-model="obj.city" ng-required="true" placeholder="Enter City" />
+                                    </div>
+                                <p ng-if="submitted && distributorForm.city.$error.required" class="haserror">Enter City</p>
+                                    <br>
+                                </div>
+                            </div>
+                          </div>
+
+                         <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label labelrt col-sm-4">Address</label>
+                                <div class="col-sm-4">
+                                <div class="form-line" ng-class="{'error':submitted && distributorForm.address.$error.required}">
+                                    <textarea class="form-control" name="address" id="address" ng-model="obj.address" ng-required="true" placeholder="Enter Address"></textarea>
+                                    </div>
+                                <p ng-if="submitted && distributorForm.address.$error.required" class="haserror">Enter Address</p>
+                                <p ng-if="submitted && obj.isExist" class="existserror">Trader Already Exists</p>
+                                    <br>
+                                </div>
+                            </div>
+                          </div>
+
+                         <div class="col-sm-12">
+                            <div class="form-group">
+                                <div class="col-sm-offset-4">
+                                    <button type="submit" name="sub" id="sub" class="btn btn-primary">{{obj.id ? 'Update' : 'Create'}}</button>
+                                    <button type="reset" class="btn btn-danger" ng-click="getDistributors()">Cancel</button>
+                                </div>
+                            </div>
+                          </div>
+                      </form>
+                     </div>
+                 </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add Trader -->
+        <!-- Body Content -->
+    </div>
+</section>

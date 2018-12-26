@@ -1,0 +1,21 @@
+<FilesMatch ".(html|htm|js|css|php)$">
+    FileETag None
+    <ifModule mod_headers.c>
+        Header unset ETag
+        Header set Cache-Control "no-cache, no-store, must-revalidate, max-age=0"
+        Header set Pragma "no-cache"
+        Header set Expires "Wed, 11 Jan 1984 05:00:00 GMT"
+    </ifModule>
+</FilesMatch>
+
+Options All -Indexes
+Options +FollowSymlinks
+RewriteEngine on
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-l
+
+RewriteRule ^ws/(.*)$ db/ws.php?path=$1
+RewriteRule ^home$ home.php
+RewriteRule ^index(.*)$ index.php

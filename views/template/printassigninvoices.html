@@ -1,0 +1,28 @@
+						<table width="100%" align="center">
+                        <tr>
+                            <td align="center"><b>Name: {{printRecs.cboy_name}}</b></td>
+                            <td align="center"><b>Contact Number: {{printRecs.contact_no}}</b></td>
+                        </tr>
+                      </table>
+                        <table class="tab8" width="100%" rules="all" border="1">
+                            <tr>
+                                <th>Sl.No</th>
+                                <th>Retailer Name</th>
+                                <th>Invoice Number</th>
+                                <th>Invoice Date</th>
+                                <th>Distributor Name</th>
+                                <th>Total Amount</th>
+                                <th>Paid Amount</th>
+                                <th>Due Amount</th>
+                            </tr>
+                            <tr ng-repeat="printrec in printRecs.invoices">
+                                <td>{{$index+1}}</td>
+                                <td>{{printrec.retailer_name}}</td>
+                                <td>{{printrec.invoice_number}}</td>
+                                <td align="center">{{printrec.invoice_date}}</td>
+                                <td>{{printrec.distributor_name}}</td>
+                                <td align="right">{{printrec.total_amount | INR}}</td>
+                                <td align="right">{{printrec.paid_amount | INR}}</td>
+                                <td align="right">{{printrec.due_amount | INR}}</td>
+                            </tr>
+                        </table>

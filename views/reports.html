@@ -1,0 +1,163 @@
+<section class="content">
+    <div class="container-fluid">
+        <!-- REPORTS List -->
+        <div class="row clearfix fade-element-in">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                <div class="header headerborder">
+                    <h2>
+                        Reports <!-- <span class="badge bg-cyan badgeright MARRHT5" ng-click="getCboysPage()">CBoys</span> <span class="badge bg-cyan badgeright MARRHT5" ng-click="getBeats()">Beats</span> <span class="badge bg-cyan badgeright MARRHT5" ng-click="getRetailers()">Retailers</span> <span class="badge bg-cyan badgeright MARRHT5" ng-click="getInvoicesPage()">Invoice</span> --> <span class="badge bg-cyan badgeright MARRHT5" print-div=".printDiv" ng-if="recs!=0">Print</span>
+                    </h2>
+                </div>
+                 <div class="table-responsive" style="padding: 10px" ng-if="isCboys">
+                    <form method="post" novalidate name="reportsForm" id="reportsForm" ng-submit="subForm(reportsForm.$valid)">
+                     <div class="col-sm-12">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label class="form-label labelrt col-sm-6">Collection Boys</label>
+                                <div class="col-sm-6">
+                                <div class="form-line" ng-class="{'error':submitted && reportsForm.cboy_id.$error.required}">
+                                    <select class="form-control" name="cboy_id" id="cboy_id" ng-model="obj.cboy_id" ng-required="true">
+                                    <option value="">Select Name</option>
+                                    <option ng-repeat="cboy in cboys" value="{{cboy.id}}" ng-if="cboys!=0">{{cboy.cboy_name}} - {{cboy.contact_no}}</option>
+                                    </select>
+                                </div>
+                                <p ng-if="submitted && reportsForm.cboy_id.$error.required" class="haserror">Select Name</p>
+                                </div>
+                            </div>
+                          </div>
+
+                         <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="form-label labelrt col-sm-6">From Date</label>
+                            <div class="col-sm-6">
+                            <div class="form-line" ng-class="{'error':submitted && reportsForm.from_date.$error.required}">
+                                <input type="text" name="from_date" class="form-control" id="from_date" ng-model="obj.from_date" placeholder="Select From Date" ng-required="obj.to_date" ng-readonly="true" datepicker datepicker-format="dd-MMM-yyyy"/>
+                            </div>
+                            <p ng-if="submitted && reportsForm.from_date.$error.required" class="haserror">Select From Date</p>
+                            </div>
+                        </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="form-label labelrt col-sm-6">To Date</label>
+                            <div class="col-sm-6">
+                            <div class="form-line" ng-class="{'error':submitted && reportsForm.to_date.$error.required}">
+                                <input type="text" name="to_date" class="form-control" id="to_date" ng-model="obj.to_date" placeholder="Select To Date" ng-required="obj.from_date" ng-readonly="true" datepicker datepicker-format="dd-MMM-yyyy"/>
+                                </div>
+                            <p ng-if="submitted && reportsForm.to_date.$error.required" class="haserror">Select To Date</p>
+                            </div>
+                        </div>
+                        </div>
+
+                        <div class="col-sm-4 col-md-offset-4" style="margin-bottom: 15px">
+                            <button type="submit" name="sub" id="sub" class="btn btn-primary">Search</button>
+                            <button type="reset" class="btn btn-danger" ng-click="resetForm()">Cancel</button>
+                        </div>
+                      </div>
+                    </form><br><br>
+                      <div class="clearfix"></div>
+
+                      <div class="printDiv">
+                        <table class="inprint" width="100%" align="center">
+                            <tr>
+                                <td align="center"><h3>Agent Name : {{obj.cboy_name}}</h3></td>
+                                <td align="center"><h3>Phone Number : {{obj.contact_no}}</h3></td>
+                            </tr>
+                        </table>
+                            <p align="center" style="text-align: center !important;margin-top:0px" ng-if="total_amount!=''"><b>Total Amount:</b> {{total_amount | INR}}</p>
+                         <table class="tab8" width="100%" border="1" rules="all">
+                            <tr>
+                                <th>Sl.no</th>
+                                <th>Invoice Number</th>
+                                <th>Paid Date</th>
+                                <th>Pay Mode</th>
+                                <th>Paid Amount</th>
+                                <th>Remarks</th>
+                            </tr>
+                            <tr ng-repeat="rec in recs" ng-if="recs!=0">
+                                <td>{{$index+1}}.</td>
+                                <td>{{rec.invoice_number}}</td>
+                                <td>{{rec.pay_date}}</td>
+                                <td>{{rec.pay_mode}}</td>
+                                <td align="right">{{rec.paid_amount | INR}}</td>
+                                <td>{{rec.remarks}}</td>
+                            </tr>
+                            <tr ng-if="recs==0">
+                                <td colspan="8" align="center">No Invoices Found...</td>
+                            </tr>
+                         </table>
+                    </div>
+                 </div>
+
+                 <div class="table-responsive" style="padding: 10px" ng-if="isInvoices">
+                    <form method="post" novalidate name="invoiceForm" id="invoiceForm" class="col-md-offset-2" ng-submit="subInvoiceForm(invoiceForm.$valid)">
+                     <div class="col-sm-12">
+                         <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="form-label labelrt col-sm-5">From Date</label>
+                            <div class="col-sm-7">
+                            <div class="form-line" ng-class="{'error':invoiceSubmitted && invoiceForm.from_date.$error.required}">
+                                <input type="text" name="from_date" class="form-control" id="from_date" ng-model="obj.from_date" placeholder="Select From Date" ng-required="obj.to_date" ng-readonly="true" datepicker datepicker-format="dd-MMM-yyyy"/>
+                            </div>
+                            <p ng-if="invoiceSubmitted && invoiceForm.from_date.$error.required" class="haserror">Select From Date</p>
+                            </div>
+                        </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                        <div class="form-group">
+                            <label class="form-label labelrt col-sm-5">To Date</label>
+                            <div class="col-sm-7">
+                            <div class="form-line" ng-class="{'error':invoiceSubmitted && invoiceForm.to_date.$error.required}">
+                                <input type="text" name="to_date" class="form-control" id="to_date" ng-model="obj.to_date" placeholder="Select To Date" ng-required="obj.from_date" ng-readonly="true" datepicker datepicker-format="dd-MMM-yyyy"/>
+                                </div>
+                            <p ng-if="invoiceSubmitted && invoiceForm.to_date.$error.required" class="haserror">Select To Date</p>
+                            </div>
+                        </div>
+                        </div>
+
+                        <div class="col-sm-4 col-md-offset-2" style="margin-bottom: 15px">
+                            <button type="submit" name="sub" id="sub" class="btn btn-primary">Search</button>
+                            <button type="reset" class="btn btn-danger" ng-click="resetForm()">Cancel</button>
+                        </div>
+                      </div>
+                    </form><br><br>
+                      <div class="clearfix"></div>
+
+                      <div class="printDiv">
+                         <table class="tab8" width="100%" border="1" rules="all">
+                            <tr>
+                                <th>Sl.no</th>
+                                <th>Retailer Name</th>
+                                <th>Retailer Number</th>
+                                <th>Invoice Date</th>
+                                <th>Distributor Name</th>
+                                <th>Total Amount</th>
+                                <th>Paid Amount</th>
+                                <th>Due Amount</th>
+                            </tr>
+                            <tr ng-repeat="rec in recs" ng-if="recs!=0">
+                                <td>{{$index+1}}.</td>
+                                <td>{{rec.retailer_name}}</td>
+                                <td>{{rec.contact_no}}</td>
+                                <td>{{rec.invoice_date}}</td>
+                                <td>{{rec.distributor_name}}</td>
+                                <td align="right">{{rec.total_amount | INR}}</td>
+                                <td align="right">{{rec.paid_amount | INR}}</td>
+                                <td align="right">{{rec.due_amount | INR}}</td>
+                            </tr>
+                            <tr ng-if="recs==0">
+                                <td colspan="8" align="center">No Invoices Found...</td>
+                            </tr>
+                         </table>
+                    </div>
+                 </div>
+                </div>
+            </div>
+        </div>
+        <!-- REPORTS List -->
+        <!-- Body Content -->
+    </div>
+</section>

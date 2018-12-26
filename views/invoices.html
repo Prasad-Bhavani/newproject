@@ -1,0 +1,385 @@
+<section class="content" ng-controller="invoiceCtrl as ctrl">
+    <div class="container-fluid">
+        <!-- INVOICES List -->
+        <div class="row clearfix fade-element-in" ng-if="isInvoices">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                <div class="header headerborder">
+                    <h2>
+                        Invoices <span class="badge bg-cyan badgeright" ng-click="addInvoice()">Add Invoice</span> <!-- <span class="badge bg-cyan badgeright MARRHT5" ng-click="assignInvoices('')">Assign Invoices</span> -->
+                    </h2>
+                </div>
+                                 <div class="table-responsive table-bordered ng-table-settings">
+                     <table ng-table="tableParams" class="table" show-filter="true">
+                        <tr ng-repeat="invoice in $data" ng-if="$data.length>0">
+                            <td title="'Sl.No'" sortable="'sno'">{{invoice.sno}}.</td>
+                            <td data-title="'Invoice No'" ng-click="getInvoiceHistory(invoice)" style="color: blue;text-decoration: underline;cursor: pointer" title="Invoice History" sortable="'invoice_number'" filter="{ 'invoice_number': 'text' }">{{ invoice.invoice_number }}</td>
+                            <td data-title="'Invoice Date'" sortable="'invoice_date'" filter="{ 'invoice_date': 'text' }">{{ invoice.invoice_date }}</td>
+                            <td data-title="'Trader'" sortable="'distributor_name'" filter="{ 'distributor_name': 'text' }">{{ invoice.distributor_name }}</td>
+                            <!-- <td data-title="'City'" sortable="'city'" filter="{ 'city': 'text' }">{{ invoice.city }}</td> -->
+                            <td data-title="'Contact No'" sortable="'contact_no'" filter="{ 'contact_no': 'text' }">{{ invoice.contact_no }}</td>
+                            <td data-title="'Total Amount (Rs.)'" sortable="'total_amount'" filter="{ 'total_amount': 'text' }" align="right">{{ invoice.total_amount}}</td>
+                            <td data-title="'Balance Amount (Rs.)'" sortable="'balance_amount'" filter="{ 'balance_amount': 'text' }" align="right">{{ invoice.balance_amount }}</td>
+                            <td style="text-align: right !important" data-title="'Payment Status'" sortable="'payment_status'" filter="{ 'payment_status': 'text' }">{{invoice.payment_status}}</td>
+                            <td data-title="'Action'" align="center">
+                                <button type="button" ng-disabled="invoice.balance_amount==0" class="btn btn-primary btnsmall" ng-click="getInvoice(invoice.id)">Update</button></td>
+                                <!-- <i ng-click="getInvoice(invoice.id)" title="Edit" class="fa fa-edit primary"></i> -->
+                                <!-- <i title="No Edit" ng-if="invoice.due_amount<=0" class="fa fa-edit primary"></i>
+                                <i ng-click="getInvoiceHistory(invoice)" title="History View" class="fa fa-eye primary"></i> -->
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="10" align="center" ng-if="$data.length==0">No Records Found...</td>
+                        </tr>
+                     </table>
+                 </div>
+                </div>
+            </div>
+        </div>
+        <!-- INVOICES List -->
+
+        <!-- Add Invoice -->
+        <div class="row clearfix fade-element-in" ng-if="!isInvoices" style="min-height: 350px">
+            <div ng-if="isAdd">
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="card">
+        <div class="header headerborder">
+            <h2>
+                Add Invoice <span class="badge bg-cyan badgeright" ng-click="getInvoices()">View Invoices</span>
+            </h2>
+        </div>
+         <div class="body">
+             <div class="row clearfix">
+                <form method="post" novalidate name="addInvoiceForm" id="addInvoiceForm" ng-submit="subInvoice(addInvoiceForm.$valid)" autocomplete="off">
+                    <div class="col-md-offset-2">
+                        <label class="form-label labelrt col-sm-2">Invoice Date</label>
+                    <div class="col-md-4" style="margin-top: -10px">
+                        <input class="form-control" ng-class="{'input-error':submitted && addInvoiceForm.invoice_date.$error.required}" datepicker datepicker-format="dd-MMM-yyyy" name="invoice_date" id="invoice_date" ng-model="obj.invoice_date" ng-required="true" ng-readonly="true" placeholder="Select Date" />
+                        <p ng-if="submitted && addInvoiceForm.invoice_date.$error.required" class="haserror">Select Invoice Date</p>
+                    </div>
+                    <div class="col-sm-4" style="margin-top: -10px">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-danger" ng-click="getInvoices()">Cancel</button>
+                    </div>
+                    </div>
+                </form>
+                <br>
+                <div class="clearfix"></div>
+                <form method="post" novalidate name="addObjForm" id="addObjForm" ng-submit="addObjtoRecs(addObjForm.$valid)" autocomplete="off">
+                    <div class="table-responsive" style="min-height: 350px !important;overflow-y: scroll">
+                    <table width="100%" class="tab8" style="">
+                        <tr>
+                            <th align="center" style="text-align: center !important;height: 30px !important">From</th>
+                            <th align="center" style="text-align: center !important;height: 30px !important">Agent</th>
+                            <th align="center" style="text-align: center !important;height: 30px !important">Invoice No</th>
+                            <th align="center" style="text-align: center !important;height: 30px !important">Trader</th>
+                            <th align="center" style="text-align: center !important;height: 30px !important">Quantity (Quintal)</th>
+                            <th align="center" style="text-align: center !important;height: 30px !important">Total Amount</th>
+                            <th align="center" style="text-align: center !important;height: 30px !important">Discount</th>
+                            <th align="center" style="text-align: center !important;height: 30px !important">Balance</th>
+                            <th align="center" style="text-align: center !important;height: 30px !important">Action</th>
+                        </tr>
+                        <tr ng-repeat="rec in objRecs">
+                            <td style="height: 30px !important">{{rec.refered_by}}</td>
+                            <td style="height: 30px !important">{{rec.agent_name}}</td>
+                            <td style="height: 30px !important">{{rec.invoice_number}}</td>
+                            <td style="height: 30px !important">{{rec.distributor_name}}</td>
+                            <td style="height: 30px !important">{{rec.quantity}}</td>
+                            <td style="height: 30px !important" align="right">{{rec.total_amount | INR}}</td>
+                            <td style="height: 30px !important" align="right">{{rec.discount}}</td>
+                            <td style="height: 30px !important" align="right">{{rec.balance_amount | INR}}</td>
+                            <td style="height: 30px !important">
+                                <span class="badge bg-cyan btnsmall" ng-click="removeObj($index)" style="cursor: pointer">Remove</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="height: 30px !important">
+                                <select class="form-control" style="width: 85px" ng-change="getAgentsByType(objRec.refered_by)" name="refered_by" id="refered_by" ng-model="objRec.refered_by" ng-required="true" ng-class="{'input-error': objsubmit && addObjForm.refered_by.$error.required}">
+                                    <option value="">From</option>
+                                    <option>Broker</option>
+                                    <option>Direct</option>
+                                    <option>Sales Officer</option>
+                                </select>
+                                <!-- <input type="text" class="form-control" name="distributor_name" id="distributor_name" ng-model="objRec.distributor_name" ng-required="true" placeholder="Distributor" ng-class="{'input-error': objsubmit && addObjForm.distributor_name.$error.required}"/> -->
+                            </td>
+                            <td style="height: 30px !important">
+                                <select class="form-control" name="agent_id" style="width: 85px !important" id="agent_id" ng-model="objRec.agent_id" ng-required="objRec.refered_by && objRec.refered_by!='Direct'" ng-class="{'input-error': objsubmit && addObjForm.agent_id.$error.required}">
+                                    <option value="">Agent</option>
+                                    <option ng-repeat="agent in agents" value="{{agent.id}}" ng-if="agent.status==1">{{agent.name}}</option>
+                                </select>
+                                <!-- <input type="text" class="form-control" name="distributor_name" id="distributor_name" ng-model="objRec.distributor_name" ng-required="true" placeholder="Distributor" ng-class="{'input-error': objsubmit && addObjForm.distributor_name.$error.required}"/> -->
+                            </td>
+                            <td style="height: 30px !important">
+                                <input type="text" class="form-control" name="invoice_number" id="invoice_number" ng-model="objRec.invoice_number" ng-required="true" placeholder="Invoice No" ng-pattern="/^[0-9]+$/" ng-class="{'input-error': objsubmit && (addObjForm.invoice_number.$error.required || addObjForm.invoice_number.$error.pattern)}" />
+                            </td>
+                            <td style="height: 30px !important">
+                                <div class="input-group">
+            <ui-select ng-required="true" ng-class="{'input-error': objsubmit && addObjForm.distributor_id.$error.required}" ng-model="distObj.selected" theme="select2" class="form-control" title="Choose a person" name="distributor_id">
+              <ui-select-match placeholder="Select Trader...">{{$select.selected.distributor_name}}</ui-select-match>
+              <ui-select-choices repeat="dist in distributors | filter: $select.search">
+                <span ng-bind-html="dist.distributor_name | highlight: $select.search"></span>
+              </ui-select-choices>
+            </ui-select>
+            <span class="glyphicon glyphicon-trash" ng-click="clearDistrib()" style="cursor: pointer"></span>
+            </div>
+            <br><br>
+
+                <!--                 <input type="text" ng-change="onedit()" style="top: 220px !important" ng-model="objRec.distributor_id" uib-typeahead="dist as dist.distributor_name for dist in distributors | filter:$viewValue" class="form-control" placeholder="Trader" onblur="this.placeholder='Trader'" onfocus="this.placeholder=''" ng-required="true"> -->
+                                <!-- <select class="form-control" style="width: 125px !important;" name="distributor_id" id="distributor_id" ng-model="objRec.distributor_id" ng-required="true" ng-class="{'input-error': objsubmit && addObjForm.distributor_id.$error.required}">
+                                    <option value="">Trader</option>
+                                    <option ng-repeat="dis in distributors" value="{{dis.id}}" ng-if="dis.status==1">{{dis.distributor_name}}</option>
+                                </select> -->
+                                <!-- <input type="text" class="form-control" name="distributor_name" id="distributor_name" ng-model="objRec.distributor_name" ng-required="true" placeholder="Distributor" ng-class="{'input-error': objsubmit && addObjForm.distributor_name.$error.required}"/> -->
+                            </td>
+                            <!-- <td>
+                                <input type="text" class="form-control" name="city" id="city" ng-model="objRec.city" ng-required="true" placeholder="City" ng-class="{'input-error': objsubmit && addObjForm.city.$error.required}"/>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" name="mobile_no" id="mobile_no" ng-model="objRec.mobile_no" ng-required="true" placeholder="Mobile" ng-pattern="/^[0-9]+$/" ng-class="{'input-error': objsubmit && (addObjForm.mobile_no.$error.required || addObjForm.mobile_no.$error.pattern)}"/>
+                            </td> -->
+                            <td style="height: 30px !important">
+                                <input type="text" class="form-control" style="width: 55px !important" name="quantity" id="quantity" ng-model="objRec.quantity" ng-required="true" placeholder="Quantity" ng-class="{'input-error': objsubmit && addObjForm.quantity.$error.required}"/>
+                            </td>
+                            <td style="height: 30px !important">
+                                <input type="number" class="form-control" name="total_amount" ng-change="getDiscountAmount()" style="width: 100px !important" id="total_amount" ng-model="objRec.total_amount" ng-required="true" placeholder="Amount" ng-pattern="/^[1-9][0-9]*(\.[0-9]{1,2})?$/" ng-class="{'input-error': objsubmit && (addObjForm.total_amount.$error.required || addObjForm.total_amount.$error.pattern)}"/>
+                            </td>
+                            <td valign="top" style="height: 30px !important">
+                                <input type="number" class="form-control" style="width: 50px !important" ng-change="getDiscountAmount()" ng-init="objRec.discount_percent=0" name="discount_percent" id="discount_percent" ng-model="objRec.discount_percent" ng-required="true" placeholder="Discount" ng-min="0" ng-max="3.5" ng-pattern="/^[0-9]*(\.[0-9]{1,1})?$/" ng-class="{'input-error': objsubmit && ((addObjForm.discount_percent.$error.required || addObjForm.discount_percent.$error.pattern) || (!addObjForm.discount_percent.$error.required && !addObjForm.discount_percent.$valid))}"/><br>
+                                <span ng-if="objRec.discount && objRec.discount!=0">{{objRec.discount}}</span>
+                            </td>
+                            <td style="height: 30px !important">
+                                <input type="number" class="form-control" name="balance_amount" id="balance_amount" ng-model="objRec.balance_amount" ng-required="true" placeholder="Balance" ng-min="0" ng-max="objRec.total_amount-objRec.discount" ng-pattern="/^[0]$|^[1-9][0-9]*(\.[0-9]{1,2})?$/" ng-class="{'input-error': objsubmit && (addObjForm.balance_amount.$error.required || addObjForm.balance_amount.$error.pattern) || (!addObjForm.balance_amount.$error.required && !addObjForm.balance_amount.$valid)}"/>
+                            </td>
+                            <td style="height: 30px !important">
+                                <button type="submit" class="badge bg-cyan btnsmall"  style="cursor: pointer">Add</button>
+                            </td>
+                        </tr>
+                    </table>
+                    </div>
+                </form>
+            </div>
+        </div>
+  </div>
+  <div class="clearfix"></div>
+</div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" ng-if="!isInvoiceHistory && !isAdd">
+                <div class="card">
+                <div class="header headerborder">
+                    <h2>
+                        Assign Invoices <span class="badge bg-cyan badgeright" ng-click="getInvoices()">View Invoices</span>
+                    </h2>
+                </div>
+                <span class="badge bg-cyan badgeright printAssignInvoices" print-div=".printDiv" style="display: none">Print</span>
+                 <div class="body">
+                     <div class="row clearfix">
+                     <form method="post" name="assignSearchInvoiceForm" id="assignSearchInvoiceForm" novalidate autocomplete="off" ng-submit="searchForm(assignSearchInvoiceForm.$valid)">
+                        <div ng-if="!assign">
+                         <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="form-label labelrt col-sm-4">From</label>
+                                <div class="col-sm-8">
+                                <div class="form-line" ng-class="{'error':searchSubmitted && assignSearchInvoiceForm.from_date.$error.required}">
+                                    <input type="text" name="from_date" class="form-control" id="from_date" ng-model="searchObj.from_date" placeholder="From Date" ng-required="true" ng-readonly="true" datepicker datepicker-format="dd-MMM-yyyy"/>
+                                    </div>
+                                <p ng-if="searchSubmitted && assignSearchInvoiceForm.from_date.$error.required" class="haserror">Select From Date</p>
+                                </div>
+                            </div>
+                          </div>
+
+                         <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="form-label labelrt col-sm-4">To</label>
+                                <div class="col-sm-8">
+                                <div class="form-line" ng-class="{'error':searchSubmitted && assignSearchInvoiceForm.to_date.$error.required}">
+                                    <input type="text" name="to_date" class="form-control" id="to_date" ng-model="searchObj.to_date" placeholder="To Date" ng-required="true" ng-readonly="true" datepicker datepicker-format="dd-MMM-yyyy"/>
+                                    </div>
+                                <p ng-if="searchSubmitted && assignSearchInvoiceForm.to_date.$error.required" class="haserror">Select To Date</p>
+                                </div>
+                            </div>
+                          </div>
+
+                         <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="form-label labelrt col-sm-4">Count</label>
+                                <div class="col-sm-8">
+                                <div class="form-line" ng-class="{'error':searchSubmitted && assignSearchInvoiceForm.limit.$error.required}">
+                                    <select class="form-control" name="limit" id="limit" ng-model="searchObj.limit">
+                                    <option value="">Select Count</option>
+                                    <option>10</option>
+                                    <option>20</option>
+                                    <option>30</option>
+                                    <option>40</option>
+                                    <option>50</option>
+                                    <option>60</option>
+                                    <option>70</option>
+                                    <option>80</option>
+                                    <option>90</option>
+                                    <option>100</option>
+                                    </select>
+                                </div>
+                                <p ng-if="searchSubmitted && assignSearchInvoiceForm.limit.$error.required" class="haserror">Select Count</p>
+                                </div>
+                            </div>
+                          </div>
+
+                         <div class="col-sm-3">
+                            <div class="form-group">
+                                <div class="">
+                                    <button type="submit" name="sub" id="sub" class="btn btn-primary">Search</button>
+                                    <button type="reset" class="btn btn-danger" ng-click="cancelAssign()">Cancel</button>
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+
+                      <form method="post" name="assignInvoiceForm" id="assignInvoiceForm" novalidate autocomplete="off" ng-submit="assignInvoicestoAgent(assignInvoiceForm.$valid)">
+                        <div ng-if="assign">
+                         <div class="col-sm-6 col-md-offset-2">
+                            <div class="form-group">
+                                <label class="form-label labelrt col-sm-4">Collection Boy</label>
+                                <div class="col-sm-8">
+                                <div class="form-line" ng-class="{'error':assignSubmitted && assignInvoiceForm.cboy_id.$error.required}">
+                                    <select class="form-control" name="cboy_id" id="cboy_id" ng-model="assignObj.cboy_id" ng-required="true">
+                                    <option value="">Select Name</option>
+                                    <option ng-repeat="cboy in cboys" value="{{cboy.id}}" ng-if="cboy.status==1">{{cboy.cboy_name}} - {{cboy.contact_no}}</option>
+                                    </select>
+                                </div>
+                                <p ng-if="assignSubmitted && assignInvoiceForm.cboy_id.$error.required" class="haserror">Select Agent</p>
+                                </div>
+                            </div>
+                          </div>
+
+                         <div class="col-sm-4">
+                            <div class="form-group">
+                                <div class="">
+                                    <button type="submit" name="sub" id="sub" class="btn btn-primary">Assgin</button>
+                                    <button type="reset" class="btn btn-danger" ng-click="closeAssign()">Close</button>
+                                </div>
+                            </div>
+                          </div>
+                          <div class="clearfix"></div>
+                      </div>
+
+                      <div style="display: none" class="printDiv">
+                      <div ng-include="'views/template/printassigninvoices.html'"></div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="table-responsive">
+                        <table class="tab8" width="100%" rules="all" border="1">
+                            <tr>
+                                <th>Sl.No</th>
+                                <th>Retailer Name</th>
+                                <th>Invoice No</th>
+                                <th>Invoice Date</th>
+                                <th>Trader Name</th>
+                                <th>Total Amount</th>
+                                <th>Paid Amount</th>
+                                <th>Due Amount</th>
+                                <th class="noprint"><input type="checkbox" name="isCheck" id="isCheck" ng-model="assignObj.isCheck" value="1" ng-click="checkAll()" ng-if="invoiceRecs!=0" /></th>
+                            </tr>
+                            <tr ng-repeat="rec in invoiceRecs" ng-if="invoiceRecs!=0">
+                                <td>{{$index+1}}</td>
+                                <td>{{rec.retailer_name}}</td>
+                                <td>{{rec.invoice_number}}</td>
+                                <td align="center">{{rec.invoice_date}}</td>
+                                <td>{{rec.distributor_name}}</td>
+                                <td align="right">{{rec.total_amount | INR}}</td>
+                                <td align="right">{{rec.paid_amount | INR}}</td>
+                                <td align="right">{{rec.due_amount | INR}}</td>
+                                <td class="noprint"><input type="checkbox" ng-model="selected.invoices[rec.id]" ng-click="getInvoiceids()" /></td>
+                            </tr>
+                            <tr ng-if="invoiceRecs==0">
+                                <td align="center" colspan="9">No Invoices Found...</td>
+                            </tr>
+                        </table>
+                        </div>
+                        </form>
+                     </div>
+                 </div>
+                </div>
+            </div>
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" ng-if="isInvoiceHistory && !isAdd">
+                <div class="card">
+                <div class="header headerborder">
+                    <h2>
+                        Invoice History <span class="badge bg-cyan badgeright" ng-click="getClose()">Close</span>
+                    </h2>
+                </div>
+                 <div class="body">
+                     <div class="row clearfix">
+                        <div class="col-md-12">
+                        <div class="col-md-3 MARTOP8">
+                            <b>Invoice No : </b> {{invoiceRec.invoice_number}}
+                        </div>
+                        <div class="col-md-6 MARTOP8">
+                            <b>Trader Name : </b> {{invoiceRec.distributor_name}}
+                        </div>
+                        <div class="col-md-3 MARTOP8">
+                            <b>Invoice Date :</b> {{invoiceRec.invoice_date}}
+                        </div>
+                        <div class="col-md-3 MARTOP8">
+                            <b>Quantity: </b> {{invoiceRec.quantity}}
+                        </div>
+                        <div class="col-md-3 MARTOP8">
+                            <b>Total Amount: </b> {{invoiceRec.total_amount | INR}}
+                        </div>
+                        <div class="col-md-6 MARTOP8">
+                            <b>Paid Amount : </b> {{(invoiceRec.total_amount-invoiceRec.balance_amount) | INR}}
+                        </div>
+                        <div class="col-md-3 MARTOP8">
+                            <b>Balance Amount : </b> {{invoiceRec.balance_amount | INR}}
+                        </div>
+                        <div class="col-md-3 MARTOP8">
+                            <b>Invoice Refered By: </b> {{invoiceRec.agent_name}}
+                        </div>
+                        <div class="col-md-6 MARTOP8">
+                            <b>Discount : </b> {{invoiceRec.discount}}
+                        </div>
+                        <div class="col-md-3 MARTOP8">
+                            <b>Remarks : </b> {{invoiceRec.remarks}}
+                        </div>
+                        <div class="col-md-3 MARTOP8">
+                            <b>Last Updated BY : </b> {{invoiceRec.updated_by}}
+                        </div>
+                        <div class="col-md-3 MARTOP8">
+                            <b>Last Payment : </b> {{invoiceRec.updated_date}}
+                        </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <br>
+
+                        <div class="table-responsive">
+                            <table width="100%" border="1" rules="all" class="tab8">
+                                <tr>
+                                    <th>Sl.No</th>
+                                    <th>Paid Date</th>
+                                    <th>Paid Amount</th>
+                                    <th>Payment Type</th>
+                                    <th>Remarks</th>
+                                    <th>Updated User</th>
+                                </tr>
+                                <tr ng-repeat="historyrec in historyrecs" ng-if="historyrecs!=0">
+                                    <td>{{$index+1}}.</td>
+                                    <td align="center">{{historyrec.paid_date}}</td>
+                                    <td align="right">{{historyrec.paid_amount | INR}}</td>
+                                    <td>{{historyrec.payment_type}}</td>
+                                    <td>{{historyrec.remarks}}</td>
+                                    <td>{{historyrec.username}}</td>
+                                </tr>
+                                <tr ng-if="historyrecs==0">
+                                    <td align="center" colspan="6">No History Found...</td>
+                                </tr>
+                            </table>
+                        </div>
+                     </div>
+                 </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add Invoice -->
+        <!-- Body Content -->
+    </div>
+</section>

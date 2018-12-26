@@ -1,0 +1,150 @@
+<style type="text/css"></style>
+<section class="content">
+    <div class="container-fluid">
+        <!-- AGENTS List -->
+        <div class="row clearfix fade-element-in" ng-if="isAgents">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                <div class="header table-head">
+                    <h2>
+                        BROKER/SO's <span class="badge bg-cyan badgeright" ng-click="addAgent()">Add Broker/SO</span>
+                    </h2>
+                </div>
+                 <div class="table-responsive table-bordered ng-table-settings">
+                     <table ng-table="tableParams" class="table" show-filter="true">
+                        <tr ng-repeat="agent in $data" ng-if="$data.length>0">
+                            <td title="'Sl.No'" sortable="'sno'">{{agent.sno}}.</td>
+                            <td data-title="'Name'" sortable="'name'" filter="{ 'name': 'text' }">{{ agent.name }}</td>
+                            <td data-title="'Contact Number'" sortable="'contact_no_1'" filter="{ 'contact_no': 'text' }">{{ agent.contact_no }}</td>
+                            <td data-title="'Type'" sortable="'type'" filter="{ 'type': 'text' }">{{ agent.type }}</td>
+                            <td data-title="'Area'" sortable="'area'" filter="{ 'area': 'text' }">{{ agent.area }}</td>
+                            <td data-title="'Action'" align="center">
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn waves-effect dropdown-toggle btn-info btnsmall" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" ng-class="{' btn-primary':agent.status=='Active','btn-danger':agent.status=='Inactive'}">
+                                    {{agent.status==1 ? '&nbsp; Active &nbsp;' : 'Inactive'}} <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1">
+                                    <li ng-if="agent.status=='0'" ng-click="changeStatus(agent.id,1)"><a href="javascript:void(0);" class=" waves-effect waves-block">Active</a></li>
+                                    <li ng-if="agent.status=='1'"><a href="javascript:void(0);" class=" waves-effect waves-block" ng-click="changeStatus(agent.id,0)">Inactive</a></li>
+                                </ul>
+                            </div> <button type="button" class="btn btn-primary btnsmall" ng-click="getAgent(agent.id)">Edit</button></td>
+                        </tr>
+                        <tr>
+                            <td colspan="7" align="center" ng-if="$data.length==0">No Records Found...</td>
+                        </tr>
+                     </table>
+                 </div>
+                </div>
+            </div>
+        </div>
+        <!-- RETAILERS List -->
+
+        <!-- Add Trader -->
+        <div class="row clearfix fade-element-in" ng-if="!isAgents">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                <div class="header headerborder">
+                    <h2>
+                        Add Broker/SO <span class="badge bg-cyan badgeright" ng-click="getAgents()">View Broker/SO's</span>
+                    </h2>
+                </div>
+                 <div class="body">
+                     <div class="row clearfix">
+                     <form method="post" name="agentForm" id="agentForm" class="col-sm-offset-1" novalidate autocomplete="off" ng-submit="subForm(agentForm.$valid)">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label labelrt col-sm-4">Type</label>
+                                <div class="col-sm-4">
+                                <div class="form-line" ng-class="{'error':(submitted && agentForm.type.$error.required) || (submitted && agentForm.type.$error.pattern)}">
+                                    <select name="type" class="form-control" id="type" ng-model="obj.type" ng-required="true">
+                                        <option value="">Select Type</option>
+                                        <option>Broker</option>
+                                        <option>Sales Officer</option>
+                                    </select>
+                                    </div>
+                                <p ng-if="submitted && agentForm.type.$error.required" class="haserror">Select Type</p>
+                                </div>
+                            </div>
+                          </div>
+
+                         <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label labelrt col-sm-4">Name</label>
+                                <div class="col-sm-4">
+                                <div class="form-line" ng-class="{'error':(submitted && agentForm.name.$error.required) || (submitted && agentForm.name.$error.pattern)}">
+                                    <input type="text" name="name" class="form-control" id="name" ng-model="obj.name" placeholder="Enter Name" ng-required="true" />
+                                    </div>
+                                <p ng-if="submitted && agentForm.name.$error.required" class="haserror">Enter Name</p>
+                                </div>
+                            </div>
+                          </div>
+
+                         <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label labelrt col-sm-4">Contact Number</label>
+                                <div class="col-sm-4">
+                                <div class="form-line" ng-class="{'error':submitted && (agentForm.contact_no.$error.required || agentForm.contact_no.$error.pattern)}">
+                                    <input type="text" name="contact_no" class="form-control" id="contact_no" ng-model="obj.contact_no" placeholder="Enter Contact Number" ng-pattern="/^[0-9]{10}$/" ng-required="true" />
+                                    </div>
+                                <p ng-if="submitted && agentForm.contact_no.$error.required" class="haserror">Enter Contact Number</p>
+                                <p ng-if="submitted && agentForm.contact_no.$error.pattern" class="haserror">Enter valid Number</p>
+                                </div>
+                            </div>
+                          </div>
+
+                      <!--    <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label labelrt col-sm-4">Alternative Numbers Separated by comma(,)</label>
+                                <div class="col-sm-4">
+                                <div class="form-line" ng-class="{'error':submitted && (agentForm.alternative_nos.$error.required || agentForm.alternative_nos.$error.pattern)}">
+                                    <input type="text" name="alternative_nos" class="form-control" id="alternative_nos" ng-model="obj.alternative_nos" placeholder="Enter Alternative Number" />
+                                    </div>
+                                <p ng-if="submitted && agentForm.alternative_nos.$error.required" class="haserror">Enter Alternative Number</p>
+                                </div>
+                            </div>
+                          </div> -->
+                         <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label labelrt col-sm-4">City Name</label>
+                                <div class="col-sm-4">
+                                <div class="form-line" ng-class="{'error':submitted && agentForm.city.$error.required}">
+                                    <input type="text" name="city" class="form-control" id="city" ng-model="obj.city" ng-required="true" placeholder="Enter City" />
+                                    </div>
+                                <p ng-if="submitted && agentForm.city.$error.required" class="haserror">Enter City</p>
+                                    <br>
+                                </div>
+                            </div>
+                          </div>
+
+                         <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label labelrt col-sm-4">Area</label>
+                                <div class="col-sm-4">
+                                <div class="form-line" ng-class="{'error':submitted && agentForm.area.$error.required}">
+                                    <textarea class="form-control" name="area" id="area" ng-model="obj.area" ng-required="true" placeholder="Enter Area"></textarea>
+                                    </div>
+                                <p ng-if="submitted && agentForm.area.$error.required" class="haserror">Enter Area</p>
+                                <p ng-if="submitted && obj.isExist" class="existserror">Agent Already Exists</p>
+                                    <br>
+                                </div>
+                            </div>
+                          </div>
+
+                         <div class="col-sm-12">
+                            <div class="form-group">
+                                <div class="col-sm-offset-4">
+                                    <button type="submit" name="sub" id="sub" class="btn btn-primary">{{obj.id ? 'Update' : 'Create'}}</button>
+                                    <button type="reset" class="btn btn-danger" ng-click="getAgents()">Cancel</button>
+                                </div>
+                            </div>
+                          </div>
+                      </form>
+                     </div>
+                 </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add Agent -->
+        <!-- Body Content -->
+    </div>
+</section>

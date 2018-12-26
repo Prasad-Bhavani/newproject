@@ -1,0 +1,81 @@
+<section class="content">
+    <div class="container-fluid">
+        <!-- BEATS List -->
+        <div class="row clearfix fade-element-in" ng-if="isBeats">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                <div class="header headerborder">
+                    <h2>
+                        Beats <span class="badge bg-cyan badgeright" ng-click="addBeat()">Add Beats</span>
+                    </h2>
+                </div>
+                 <div class="table-responsive table-bordered ng-table-settings">
+                     <table ng-table="tableParams" class="table" show-filter="true">
+                        <tr ng-repeat="beat in $data" ng-if="$data.length>0">
+                            <td title="'Sl.No'" sortable="'sno'">{{beat.sno}}.</td>
+                            <td data-title="'Beat Name'" sortable="'beat_name'" filter="{ 'beat_name': 'text' }">{{ beat.beat_name }}</td>
+                            <td data-title="'Action'" align="center">
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn waves-effect dropdown-toggle btn-info btnsmall" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" ng-class="{' btn-primary':beat.status=='Active','btn-danger':beat.status=='Inactive'}">
+                                    {{beat.status==1 ? '&nbsp; Active &nbsp;' : 'Inactive'}} <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1">
+                                    <li ng-if="beat.status=='0'" ng-click="changeStatus(beat.id,1)"><a href="javascript:void(0);" class=" waves-effect waves-block">Active</a></li>
+                                    <li ng-if="beat.status=='1'"><a href="javascript:void(0);" class=" waves-effect waves-block" ng-click="changeStatus(beat.id,0)">Inactive</a></li>
+                                </ul>
+                            </div> <!-- <button type="button" class="btn btn-primary btnsmall" ng-click="getBeat(beat.id)">Edit</button> --></td>
+                        </tr>
+                        <tr>
+                            <td colspan="7" align="center" ng-if="$data.length==0">No Records Found...</td>
+                        </tr>
+                     </table>
+                 </div>
+                </div>
+            </div>
+        </div>
+        <!-- BEATS List -->
+
+        <!-- Add Beat -->
+        <div class="row clearfix fade-element-in" ng-if="!isBeats">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                <div class="header headerborder">
+                    <h2>
+                        Add <span class="badge bg-cyan badgeright" ng-click="getBeats()">View List</span>
+                    </h2>
+                </div>
+                 <div class="body">
+                     <div class="row clearfix">
+                     <form method="post" name="creationForm" id="creationForm" class="" novalidate autocomplete="off" ng-submit="subForm(creationForm.$valid)">
+                         <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label labelrt col-sm-4">Beat Name</label>
+                                <div class="col-sm-4">
+                                <div class="form-line" ng-class="{'error':(submitted && creationForm.beat_name.$error.required) || (submitted && creationForm.beat_name.$error.pattern)}">
+                                    <input type="text" name="beat_name" class="form-control" id="beat_name" ng-model="obj.beat_name" placeholder="Enter Beat Name" ng-required="true"/>
+                                    </div>
+                                <p ng-if="submitted && creationForm.beat_name.$error.required" class="haserror">Enter Beat Name</p>
+                                <p ng-if="submitted && obj.isExist" class="existserror">Beat Already Exists</p>
+                                    <br>
+                                </div>
+                            </div>
+                          </div>
+
+                         <div class="col-sm-12">
+                            <div class="form-group">
+                                <div class="col-sm-offset-4">
+                                    <button type="submit" name="sub" id="sub" class="btn btn-primary">{{obj.id ? 'Update' : 'Create'}}</button>
+                                    <button type="reset" class="btn btn-danger" ng-click="getBeats()">Cancel</button>
+                                </div>
+                            </div>
+                          </div>
+                      </form>
+                     </div>
+                 </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add Beat -->
+        <!-- Body Content -->
+    </div>
+</section>

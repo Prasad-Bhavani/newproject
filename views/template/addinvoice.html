@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style type="text/css">
+        .form-group
+        {
+            margin-top: 20px !important;
+            margin-bottom: 20px !important;
+        }
+        td
+        {
+            vertical-align: top;
+        }
+        [uib-typeahead-popup].dropdown-menu
+        {
+            top: 220px !important;
+            max-height: 150px !important;
+            overflow-y: scroll;
+        }
+    </style>
+</head>
+<body>
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="card">
+        <div class="header headerborder">
+            <h2>
+                Add Invoice <span class="badge bg-cyan badgeright" ng-click="getInvoices()">View Invoices</span>
+            </h2>
+        </div>
+         <div class="body">
+             <div class="row clearfix">
+                <form method="post" novalidate name="addInvoiceForm" id="addInvoiceForm" ng-submit="subInvoice(addInvoiceForm.$valid)" autocomplete="off">
+                    <div class="col-md-offset-2">
+                        <label class="form-label labelrt col-sm-2">Invoice Date</label>
+                    <div class="col-md-4" style="margin-top: -10px">
+                        <input class="form-control" ng-class="{'input-error':submitted && addInvoiceForm.invoice_date.$error.required}" datepicker datepicker-format="dd-MMM-yyyy" name="invoice_date" id="invoice_date" ng-model="obj.invoice_date" ng-required="true" ng-readonly="true" placeholder="Select Date" />
+                        <p ng-if="submitted && addInvoiceForm.invoice_date.$error.required" class="haserror">Select Invoice Date</p>
+                    </div>
+                    <div class="col-sm-4" style="margin-top: -10px">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="button" class="btn btn-danger" ng-click="getInvoices()">Cancel</button>
+                    </div>
+                    </div>
+                </form>
+                <br>
+                <div class="clearfix"></div>
+                <form method="post" novalidate name="addObjForm" id="addObjForm" ng-submit="addObjtoRecs(addObjForm.$valid)" autocomplete="off">
+                    <div class="table-responsive">
+                    <table width="100%" class="tab8">
+                        <tr>
+                            <th align="center" style="text-align: center !important;">From</th>
+                            <th align="center" style="text-align: center !important;">Agent</th>
+                            <th align="center" style="text-align: center !important;">Invoice</th>
+                            <th align="center" style="text-align: center !important;">Trader</th>
+                            <th align="center" style="text-align: center !important;">Quantity (QTS)</th>
+                            <th align="center" style="text-align: center !important;">Total Amount</th>
+                            <th align="center" style="text-align: center !important;">Discount</th>
+                            <th align="center" style="text-align: center !important;">Balance</th>
+                            <th align="center" style="text-align: center !important;">Action</th>
+                        </tr>
+                        <tr ng-repeat="rec in objRecs">
+                            <td>{{rec.refered_by}}</td>
+                            <td>{{rec.agent_name}}</td>
+                            <td>{{rec.invoice_number}}</td>
+                            <td>{{rec.distributor_name}}</td>
+                            <td>{{rec.quantity}}</td>
+                            <td align="right">{{rec.total_amount | INR}}</td>
+                            <td align="right">{{rec.discount}}</td>
+                            <td align="right">{{rec.balance_amount | INR}}</td>
+                            <td>
+                                <span class="badge bg-cyan btnsmall" ng-click="removeObj($index)" style="cursor: pointer">Remove</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <select class="form-control" style="width: 85px" ng-change="getAgentsByType(objRec.refered_by)" name="refered_by" id="refered_by" ng-model="objRec.refered_by" ng-required="true" ng-class="{'input-error': objsubmit && addObjForm.refered_by.$error.required}">
+                                    <option value="">From</option>
+                                    <option>Broker</option>
+                                    <option>Direct</option>
+                                    <option>Sales Officer</option>
+                                </select>
+                                <!-- <input type="text" class="form-control" name="distributor_name" id="distributor_name" ng-model="objRec.distributor_name" ng-required="true" placeholder="Distributor" ng-class="{'input-error': objsubmit && addObjForm.distributor_name.$error.required}"/> -->
+                            </td>
+                            <td>
+                                <select class="form-control" name="agent_id" style="width: 85px !important" id="agent_id" ng-model="objRec.agent_id" ng-required="objRec.refered_by && objRec.refered_by!='Direct'" ng-class="{'input-error': objsubmit && addObjForm.agent_id.$error.required}">
+                                    <option value="">Agent</option>
+                                    <option ng-repeat="agent in agents" value="{{agent.id}}" ng-if="agent.status==1">{{agent.name}}</option>
+                                </select>
+                                <!-- <input type="text" class="form-control" name="distributor_name" id="distributor_name" ng-model="objRec.distributor_name" ng-required="true" placeholder="Distributor" ng-class="{'input-error': objsubmit && addObjForm.distributor_name.$error.required}"/> -->
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" name="invoice_number" id="invoice_number" ng-model="objRec.invoice_number" ng-required="true" placeholder="Invoice Number" ng-pattern="/^[0-9]+$/" ng-class="{'input-error': objsubmit && (addObjForm.invoice_number.$error.required || addObjForm.invoice_number.$error.pattern)}" />
+                            </td>
+                            <td>
+            <ui-select ng-required="true" ng-class="{'input-error': objsubmit && addObjForm.distributor_id.$error.required}" ng-model="dist.selected" theme="select2" class="form-control" title="Choose a person" name="distributor_id">
+              <ui-select-match placeholder="Select or search a person in the list...">{{$select.selected.distributor_name}}</ui-select-match>
+              <ui-select-choices repeat="dist in distributors | filter: $select.search">
+                <span ng-bind-html="dist.distributor_name | highlight: $select.search"></span>
+                <small ng-bind-html="dist.id | highlight: $select.search"></small>
+              </ui-select-choices>
+            </ui-select>
+
+                <!--                 <input type="text" ng-change="onedit()" style="top: 220px !important" ng-model="objRec.distributor_id" uib-typeahead="dist as dist.distributor_name for dist in distributors | filter:$viewValue" class="form-control" placeholder="Trader" onblur="this.placeholder='Trader'" onfocus="this.placeholder=''" ng-required="true"> -->
+                                <!-- <select class="form-control" style="width: 125px !important;" name="distributor_id" id="distributor_id" ng-model="objRec.distributor_id" ng-required="true" ng-class="{'input-error': objsubmit && addObjForm.distributor_id.$error.required}">
+                                    <option value="">Trader</option>
+                                    <option ng-repeat="dis in distributors" value="{{dis.id}}" ng-if="dis.status==1">{{dis.distributor_name}}</option>
+                                </select> -->
+                                <!-- <input type="text" class="form-control" name="distributor_name" id="distributor_name" ng-model="objRec.distributor_name" ng-required="true" placeholder="Distributor" ng-class="{'input-error': objsubmit && addObjForm.distributor_name.$error.required}"/> -->
+                            </td>
+                            <!-- <td>
+                                <input type="text" class="form-control" name="city" id="city" ng-model="objRec.city" ng-required="true" placeholder="City" ng-class="{'input-error': objsubmit && addObjForm.city.$error.required}"/>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" name="mobile_no" id="mobile_no" ng-model="objRec.mobile_no" ng-required="true" placeholder="Mobile" ng-pattern="/^[0-9]+$/" ng-class="{'input-error': objsubmit && (addObjForm.mobile_no.$error.required || addObjForm.mobile_no.$error.pattern)}"/>
+                            </td> -->
+                            <td>
+                                <input type="text" class="form-control" style="width: 55px !important" name="quantity" id="quantity" ng-model="objRec.quantity" ng-required="true" placeholder="Quantity" ng-class="{'input-error': objsubmit && addObjForm.quantity.$error.required}"/>
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" name="total_amount" ng-change="getDiscountAmount()" style="width: 100px !important" id="total_amount" ng-model="objRec.total_amount" ng-required="true" placeholder="Amount" ng-pattern="/^[1-9][0-9]*(\.[0-9]{1,2})?$/" ng-class="{'input-error': objsubmit && (addObjForm.total_amount.$error.required || addObjForm.total_amount.$error.pattern)}"/>
+                            </td>
+                            <td valign="top">
+                                <input type="number" class="form-control" style="width: 50px !important" ng-change="getDiscountAmount()" ng-init="objRec.discount_percent=0" name="discount_percent" id="discount_percent" ng-model="objRec.discount_percent" ng-required="true" placeholder="Discount" ng-min="0" ng-max="3.5" ng-pattern="/^[0-9]*(\.[0-9]{1,1})?$/" ng-class="{'input-error': objsubmit && ((addObjForm.discount_percent.$error.required || addObjForm.discount_percent.$error.pattern) || (!addObjForm.discount_percent.$error.required && !addObjForm.discount_percent.$valid))}"/><br>
+                                <span ng-if="objRec.discount && objRec.discount!=0">{{objRec.discount}}</span>
+                            </td>
+                            <td>
+                                <input type="number" class="form-control" name="balance_amount" id="balance_amount" ng-model="objRec.balance_amount" ng-required="true" placeholder="Balance" ng-min="0" ng-max="objRec.total_amount-objRec.discount" ng-pattern="/^[0]$|^[1-9][0-9]*(\.[0-9]{1,2})?$/" ng-class="{'input-error': objsubmit && (addObjForm.balance_amount.$error.required || addObjForm.balance_amount.$error.pattern) || (!addObjForm.balance_amount.$error.required && !addObjForm.balance_amount.$valid)}"/>
+                            </td>
+                            <td>
+                                <button type="submit" class="badge bg-cyan btnsmall"  style="cursor: pointer">Add</button>
+                            </td>
+                        </tr>
+                    </table>
+                    </div>
+                </form>
+            </div>
+        </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,10 @@
+[21-Jun-2018 11:56:16 Asia/Calcutta] PHP Warning:  mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (2 &quot;No such file or directory&quot;) in /home/charvikent/public_html/invoiceapp/db/config.php on line 31
+[21-Jun-2018 11:56:16 Asia/Calcutta] PHP Stack trace:
+[21-Jun-2018 11:56:16 Asia/Calcutta] PHP   1. {main}() /home/charvikent/public_html/invoiceapp/index.php:0
+[21-Jun-2018 11:56:16 Asia/Calcutta] PHP   2. include_once() /home/charvikent/public_html/invoiceapp/index.php:2
+[21-Jun-2018 11:56:16 Asia/Calcutta] PHP   3. mysqli_connect() /home/charvikent/public_html/invoiceapp/db/config.php:31
+[22-Jun-2018 10:07:53 Asia/Calcutta] PHP Warning:  mysqli_connect(): (HY000/2002): Can't connect to local MySQL server through socket '/var/lib/mysql/mysql.sock' (111 &quot;Connection refused&quot;) in /home/charvikent/public_html/invoiceapp/db/config.php on line 31
+[22-Jun-2018 10:07:53 Asia/Calcutta] PHP Stack trace:
+[22-Jun-2018 10:07:53 Asia/Calcutta] PHP   1. {main}() /home/charvikent/public_html/invoiceapp/index.php:0
+[22-Jun-2018 10:07:53 Asia/Calcutta] PHP   2. include_once() /home/charvikent/public_html/invoiceapp/index.php:2
+[22-Jun-2018 10:07:53 Asia/Calcutta] PHP   3. mysqli_connect() /home/charvikent/public_html/invoiceapp/db/config.php:31

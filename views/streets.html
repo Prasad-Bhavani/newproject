@@ -1,0 +1,81 @@
+<section class="content">
+    <div class="container-fluid">
+        <!-- STREETS List -->
+        <div class="row clearfix fade-element-in" ng-if="isStreets">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                <div class="header headerborder">
+                    <h2>
+                        Streets <span class="badge bg-cyan badgeright" ng-click="addStreet()">Add Street</span>
+                    </h2>
+                </div>
+                 <div class="table-responsive table-bordered ng-table-settings">
+                     <table ng-table="tableParams" class="table" show-filter="true">
+                        <tr ng-repeat="street in $data" ng-if="$data.length>0">
+                            <td title="'Sl.No'" sortable="'sno'">{{street.sno}}.</td>
+                            <td data-title="'Name'" sortable="'street_name'" filter="{ 'street_name': 'text' }">{{ street.street_name }}</td>
+                            <td data-title="'Action'" align="center">
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn waves-effect dropdown-toggle btn-info btnsmall" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" ng-class="{' btn-primary':street.status=='Active','btn-danger':street.status=='Inactive'}">
+                                    {{street.status==1 ? '&nbsp; Active &nbsp;' : 'Inactive'}} <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1">
+                                    <li ng-if="street.status=='0'" ng-click="changeStatus(street.id,1)"><a href="javascript:void(0);" class=" waves-effect waves-block">Active</a></li>
+                                    <li ng-if="street.status=='1'"><a href="javascript:void(0);" class=" waves-effect waves-block" ng-click="changeStatus(street.id,0)">Inactive</a></li>
+                                </ul>
+                            </div> <button type="button" class="btn btn-primary btnsmall" ng-click="getStreet(street.id)">Edit</button></td>
+                        </tr>
+                        <tr>
+                            <td colspan="7" align="center" ng-if="$data.length==0">No Records Found...</td>
+                        </tr>
+                     </table>
+                 </div>
+                </div>
+            </div>
+        </div>
+        <!-- STREETS List -->
+
+        <!-- Add Street -->
+        <div class="row clearfix fade-element-in" ng-if="!isStreets">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                <div class="header headerborder">
+                    <h2>
+                        Add <span class="badge bg-cyan badgeright" ng-click="getStreets()">View List</span>
+                    </h2>
+                </div>
+                 <div class="body">
+                     <div class="row clearfix">
+                     <form method="post" name="creationForm" id="creationForm" class="col-sm-offset-1" novalidate autocomplete="off" ng-submit="subForm(creationForm.$valid)">
+                         <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label labelrt col-sm-4">Name</label>
+                                <div class="col-sm-4">
+                                <div class="form-line" ng-class="{'error':(submitted && creationForm.street_name.$error.required)}">
+                                    <input type="text" name="street_name" class="form-control" id="street_name" ng-model="obj.street_name" placeholder="Enter Name" ng-required="true" />
+                                    </div>
+                                <p ng-if="submitted && creationForm.street_name.$error.required" class="haserror">Enter Name</p>
+                                <p ng-if="submitted && obj.isExist" class="existserror">Name Already Exists</p>
+                                    <br>
+                                </div>
+                            </div>
+                          </div>
+
+                         <div class="col-sm-12">
+                            <div class="form-group">
+                                <div class="col-sm-offset-4">
+                                    <button type="submit" name="sub" id="sub" class="btn btn-primary">{{obj.id ? 'Update' : 'Create'}}</button>
+                                    <button type="reset" class="btn btn-danger" ng-click="getStreets()">Cancel</button>
+                                </div>
+                            </div>
+                          </div>
+                      </form>
+                     </div>
+                 </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add Street -->
+        <!-- Body Content -->
+    </div>
+</section>

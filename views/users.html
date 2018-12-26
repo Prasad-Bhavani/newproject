@@ -1,0 +1,110 @@
+<section class="content">
+    <div class="container-fluid">
+        <!-- USERS List -->
+        <div class="row clearfix fade-element-in" ng-if="isUsers">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                <div class="header headerborder">
+                    <h2>
+                        Users <span class="badge bg-cyan badgeright" ng-click="addUser()">Add</span>
+                    </h2>
+                </div>
+                 <div class="table-responsive table-bordered ng-table-settings">
+                     <table ng-table="tableParams" class="table" show-filter="true">
+                        <tr ng-repeat="user in $data" ng-if="$data.length>0">
+                            <td title="'Sl.No'" sortable="'sno'">{{user.sno}}.</td>
+                            <td data-title="'User ID'" sortable="'userid'" filter="{ 'userid': 'text' }">{{ user.userid }}</td>
+                            <td data-title="'User Name'" sortable="'username'" filter="{ 'username': 'text' }">{{ user.username }}</td>
+                            <td data-title="'Contact Number'" sortable="'contact_number'" filter="{ 'contact_number': 'text' }">{{ user.contact_number }}</td>
+                            <td data-title="'Address'" sortable="'address'" filter="{ 'address': 'text' }">{{ user.address }}</td>
+                            <td data-title="'Action'" align="center">
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn waves-effect dropdown-toggle btn-info btnsmall" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" ng-class="{' btn-primary':user.status=='Active','btn-danger':user.status=='Inactive'}">
+                                    {{user.status==1 ? '&nbsp; Active &nbsp;' : 'Inactive'}} <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="btnGroupVerticalDrop1">
+                                    <li ng-if="user.status=='0'" ng-click="changeStatus(user.id,1)"><a href="javascript:void(0);" class=" waves-effect waves-block">Active</a></li>
+                                    <li ng-if="user.status=='1'"><a href="javascript:void(0);" class=" waves-effect waves-block" ng-click="changeStatus(user.id,0)">Inactive</a></li>
+                                </ul>
+                            </div> <button type="button" class="btn btn-primary btnsmall" ng-click="getUser(user.id)">Edit</button></td>
+                        </tr>
+                        <tr>
+                            <td colspan="7" align="center" ng-if="$data.length==0">No Records Found...</td>
+                        </tr>
+                     </table>
+                 </div>
+                </div>
+            </div>
+        </div>
+        <!-- USERS List -->
+
+        <!-- Add User -->
+        <div class="row clearfix fade-element-in" ng-if="!isUsers">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                <div class="header headerborder">
+                    <h2>
+                        Add <span class="badge bg-cyan badgeright" ng-click="getUsers()">View List</span>
+                    </h2>
+                </div>
+                 <div class="body">
+                     <div class="row clearfix">
+                     <form method="post" name="creationForm" id="creationForm" class="col-sm-offset-1" novalidate autocomplete="off" ng-submit="subForm(creationForm.$valid)">
+                         <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label labelrt col-sm-4">Name</label>
+                                <div class="col-sm-4">
+                                <div class="form-line" ng-class="{'error':(submitted && creationForm.username.$error.required) || (submitted && creationForm.username.$error.pattern)}">
+                                    <input type="text" name="username" class="form-control" id="username" ng-model="obj.username" placeholder="Enter Name" ng-required="true" ng-pattern="/^[a-zA-Z. ]+$/" />
+                                    </div>
+                                <p ng-if="submitted && creationForm.username.$error.required" class="haserror">Enter Name</p>
+                                <p ng-if="submitted && creationForm.username.$error.pattern" class="haserror">Enter Name</p>
+                                </div>
+                            </div>
+                          </div>
+
+                         <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label labelrt col-sm-4">Contact Number</label>
+                                <div class="col-sm-4">
+                                <div class="form-line" ng-class="{'error':submitted && (creationForm.contact_number.$error.required || creationForm.contact_number.$error.pattern)}">
+                                    <input type="text" name="contact_number" class="form-control" id="contact_number" ng-model="obj.contact_number" placeholder="Enter Contact Number" ng-required="true" ng-pattern="/^[0-9]{10}$/" />
+                                    </div>
+                                <p ng-if="submitted && creationForm.contact_number.$error.required" class="haserror">Enter Contact Number</p>
+                                <p ng-if="submitted && creationForm.contact_number.$error.pattern" class="haserror">Enter valid Number</p>
+                                </div>
+                            </div>
+                          </div>
+
+                         <div class="col-sm-12">
+                            <div class="form-group">
+                                <label class="form-label labelrt col-sm-4">Address</label>
+                                <div class="col-sm-4">
+                                <div class="form-line" ng-class="{'error':submitted && creationForm.address.$error.required}">
+                                    <textarea class="form-control" name="address" id="address" ng-model="obj.address" ng-required="true" placeholder="Enter Address"></textarea>
+                                    </div>
+                                <p ng-if="submitted && creationForm.address.$error.required" class="haserror">Enter Address</p>
+                                <p ng-if="submitted && obj.isExist" class="existserror">Contact Number Already Exists</p>
+                                    <br>
+                                </div>
+                            </div>
+                          </div>
+
+                         <div class="col-sm-12">
+                            <div class="form-group">
+                                <div class="col-sm-offset-4">
+                                    <button type="submit" name="sub" id="sub" class="btn btn-primary">{{obj.id ? 'Update' : 'Create'}}</button>
+                                    <button type="reset" class="btn btn-danger" ng-click="getUsers()">Cancel</button>
+                                </div>
+                            </div>
+                          </div>
+                      </form>
+                     </div>
+                 </div>
+                </div>
+            </div>
+        </div>
+        <!-- Add User -->
+        <!-- Body Content -->
+    </div>
+</section>

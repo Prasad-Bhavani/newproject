@@ -1,0 +1,137 @@
+<section class="content">
+    <div class="container-fluid">
+        <!-- Assign Invoices -->
+        <div class="row clearfix fade-element-in">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" ng-if="!isInvoiceHistory && !isAdd">
+                <div class="card">
+                <div class="header headerborder">
+                    <h2>
+                        Assign Invoices
+                    </h2>
+                </div>
+                <span class="badge bg-cyan badgeright printAssignInvoices" print-div=".printDiv" style="display: none">Print</span>
+                 <div class="body">
+                     <div class="row clearfix">
+                     <form method="post" name="assignSearchInvoiceForm" id="assignSearchInvoiceForm" class="col-md-offset-2" novalidate autocomplete="off" ng-submit="searchForm(assignSearchInvoiceForm.$valid)">
+                        <div ng-if="!assign">
+                         <!-- <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="form-label labelrt col-sm-4">From</label>
+                                <div class="col-sm-8">
+                                <div class="form-line" ng-class="{'error':searchSubmitted && assignSearchInvoiceForm.from_date.$error.required}">
+                                    <input type="text" name="from_date" class="form-control" id="from_date" ng-model="searchObj.from_date" placeholder="From Date" ng-required="true" ng-readonly="true" datepicker datepicker-format="dd-MMM-yyyy"/>
+                                    </div>
+                                <p ng-if="searchSubmitted && assignSearchInvoiceForm.from_date.$error.required" class="haserror">Select From Date</p>
+                                </div>
+                            </div>
+                          </div>
+
+                         <div class="col-sm-3">
+                            <div class="form-group">
+                                <label class="form-label labelrt col-sm-4">To</label>
+                                <div class="col-sm-8">
+                                <div class="form-line" ng-class="{'error':searchSubmitted && assignSearchInvoiceForm.to_date.$error.required}">
+                                    <input type="text" name="to_date" class="form-control" id="to_date" ng-model="searchObj.to_date" placeholder="To Date" ng-required="true" ng-readonly="true" datepicker datepicker-format="dd-MMM-yyyy"/>
+                                    </div>
+                                <p ng-if="searchSubmitted && assignSearchInvoiceForm.to_date.$error.required" class="haserror">Select To Date</p>
+                                </div>
+                            </div>
+                          </div> -->
+
+                         <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="form-label labelrt col-sm-4">Beats</label>
+                                <div class="col-sm-8">
+                                <div class="form-line" ng-class="{'error':searchSubmitted && assignSearchInvoiceForm.beat_id.$error.required}">
+                                    <select class="form-control" name="beat_id" id="beat_id" ng-model="searchObj.beat_id" ng-required="true">
+                                    <option value="">Select Beat</option>
+                                    <option value="{{beat.id}}" ng-repeat="beat in beats">{{beat.beat_name}}</option>
+                                    </select>
+                                </div>
+                                <p ng-if="searchSubmitted && assignSearchInvoiceForm.beat_id.$error.required" class="haserror">Select Beat</p>
+                                </div>
+                            </div>
+                          </div>
+
+                         <div class="col-sm-3">
+                            <div class="form-group">
+                                <div class="">
+                                    <button type="submit" name="sub" id="sub" class="btn btn-primary">Search</button>
+                                    <button type="reset" class="btn btn-danger" ng-click="cancelSearch()">Cancel</button>
+                                </div>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+
+                      <form method="post" name="assignInvoiceForm" id="assignInvoiceForm" novalidate autocomplete="off" ng-submit="assignInvoicestoAgent(assignInvoiceForm.$valid)">
+                        <div ng-if="assign">
+                         <div class="col-sm-6 col-md-offset-2">
+                            <div class="form-group">
+                                <label class="form-label labelrt col-sm-4">Collection Boy</label>
+                                <div class="col-sm-8">
+                                <div class="form-line" ng-class="{'error':assignSubmitted && assignInvoiceForm.cboy_id.$error.required}">
+                                    <select class="form-control" name="cboy_id" id="cboy_id" ng-model="assignObj.cboy_id" ng-required="true">
+                                    <option value="">Select Name</option>
+                                    <option ng-repeat="cboy in cboys" value="{{cboy.id}}" ng-if="cboy.status==1">{{cboy.cboy_name}} - {{cboy.contact_no}}</option>
+                                    </select>
+                                </div>
+                                <p ng-if="assignSubmitted && assignInvoiceForm.cboy_id.$error.required" class="haserror">Select Agent</p>
+                                </div>
+                            </div>
+                          </div>
+
+                         <div class="col-sm-4">
+                            <div class="form-group">
+                                <div class="">
+                                    <button type="submit" name="sub" id="sub" class="btn btn-primary">Assgin</button>
+                                    <button type="reset" class="btn btn-danger" ng-click="closeAssign()">Close</button>
+                                </div>
+                            </div>
+                          </div>
+                          <div class="clearfix"></div>
+                      </div>
+
+                      <div style="display: none" class="printDiv">
+                      <div ng-include="'views/template/printassigninvoices.html'"></div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="table-responsive">
+                        <table class="tab8" width="100%" rules="all" border="1">
+                            <tr>
+                                <th>Sl.No</th>
+                                <th>Retailer Name</th>
+                                <th>Invoice Number</th>
+                                <th>Invoice Date</th>
+                                <th>Distributor Name</th>
+                                <th>Total Amount</th>
+                                <th>Paid Amount</th>
+                                <th>Due Amount</th>
+                                <th class="noprint"><input type="checkbox" name="isCheck" id="isCheck" ng-model="assignObj.isCheck" value="1" ng-click="checkAll()" ng-if="invoiceRecs!=0" /></th>
+                            </tr>
+                            <tr ng-repeat="rec in invoiceRecs" ng-if="invoiceRecs!=0">
+                                <td>{{$index+1}}</td>
+                                <td>{{rec.retailer_name}}</td>
+                                <td>{{rec.invoice_number}}</td>
+                                <td align="center">{{rec.invoice_date}}</td>
+                                <td>{{rec.distributor_name}}</td>
+                                <td align="right">{{rec.total_amount | INR}}</td>
+                                <td align="right">{{rec.paid_amount | INR}}</td>
+                                <td align="right">{{rec.due_amount | INR}}</td>
+                                <td class="noprint"><input type="checkbox" ng-model="selected.invoices[rec.id]" ng-click="getInvoiceids()" />{{selected}}</td>
+                            </tr>
+                            <tr ng-if="invoiceRecs==0">
+                                <td align="center" colspan="9">No Invoices Found...</td>
+                            </tr>
+                        </table>
+                        </div>
+                        </form>
+                     </div>
+                 </div>
+                </div>
+            </div>
+        </div>
+        <!-- Assign Invoices -->
+        <!-- Body Content -->
+    </div>
+</section>

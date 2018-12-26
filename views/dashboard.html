@@ -1,0 +1,188 @@
+<style>
+    h2 {
+        margin-top: -10px;
+    }
+    th, td {
+        text-align: center;
+    }
+    .th1 {
+        background: #eee;
+    }
+    .th {
+        background: #666;
+        color: #fff;
+    }
+    .tc {
+        color:#ff0000;
+        float:right;
+    }
+    .ta {
+        color:green ;
+        float:left;
+    }
+    td
+    {
+        text-align: left !important;
+    }
+    .pend {
+        padding:0px;
+    }
+    
+</style>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row clearfix">
+                <!-- Task Info -->
+                <div style="margin-top: -25px;" class="col-xs-12">
+                    <div class="card">
+                        <div class="body">
+                            <div class="table-responsive">
+                                <!-- <a href="#!distributors">
+                                <div class="col-sm-4" style="cursor: pointer;">
+                                    <div align="center" class="well tab btn-info">
+                                        <h2>Distributors</h2>
+                                        <table style="margin-bottom:-10px;" width="100%">
+                                            <tr>
+                                                <td style="border-bottom: 1px solid black;text-align:center !important"><b>Active</b></td>
+                                                <td style="border-bottom: 1px solid black;text-align:center !important"><b>Inactive</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding-top: 17px;font-size: 14px;text-align:center !important"><b>{{distributorsCount.active}}</b></th>
+                                                <td style="padding-top: 17px;font-size: 14px;text-align:center !important"><b>{{distributorsCount.inactive}}</b></th>
+                                            </tr>
+                                        </table>
+                                        <br>
+                                    </div>
+                                </div>
+                                </a>
+
+                                <a href="#!cboys">
+                                <div class="col-sm-4" style="cursor: pointer;">
+                                    <div align="center" class="well tab btn-warning">
+                                        <h2>Collection Boys</h2>
+                                        <table style="margin-bottom:-10px;" width="100%">
+                                            <tr>
+                                                <td style="border-bottom: 1px solid black;text-align:center !important"><b>Active</b></td>
+                                                <td style="border-bottom: 1px solid black;text-align:center !important"><b>Inactive</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding-top: 17px;font-size: 14px;text-align:center !important"><b>{{cboysCount.active}}</b></td>
+                                                <td style="padding-top: 17px;font-size: 14px;text-align:center !important"><b>{{cboysCount.inactive}}</b></td>
+                                            </tr>
+                                        </table>
+                                        <br>
+                                    </div>
+                                </div>
+                                </a>
+
+                                <a href="#!invoices">
+                                <div class="col-sm-4" style="cursor: pointer;" ng-click="getCustomersDueListByRange(0,30,recs.range1.due)">
+                                    <div align="center" class="well tab btn-success">
+                                        <h2>Pending Amount</h2>
+                                        <table style="margin-bottom:-10px;" width="100%" ng-init="total=0">
+                                            <tr ng-repeat="pen in distributorswisePending">
+                                                <td style="float: left"><b>{{pen.distributor_name}}</b></td>
+                                                <td align="right" style="text-align: right !important;" ng-init="$parent.total=$parent.total+(pen.due_amount-0)"><b>{{pen.due_amount | INR}}</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="float: left"><b>Total Amount</b></td>
+                                                <td style="text-align: right !important"><b>{{total+'.00' | INR}}</b></td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            </a>
+ -->
+ <div ng-if="!isInvoices">
+            <div class="header headerborder">
+                    <h2>Pending Amount</h2>
+                </div>
+                 <div>
+                 <div class="table-responsive table-bordered ng-table-settings">
+            <table ng-table="tableParams" class="table" show-filter="true">
+                <tr ng-repeat="rec in $data" ng-if="$data.length>0">
+                    <td data-title="'Sl.No'" sortable="'sno'">{{rec.sno}}.</td>
+                    <td data-title="'Trader Name'" ng-click="getInvoiceListByDistributor(rec)" style="color: blue;text-decoration: underline;cursor: pointer" title="Invoice History" sortable="'distributor_name'" filter="{ 'distributor_name': 'text' }">{{rec.distributor_name}}</td>
+                    <td data-title="'Mobile'" sortable="'contact_no'" filter="{ 'contact_no': 'text' }">{{rec.contact_no}}</td>
+                    <td style="text-align: right !important" data-title="'City'" sortable="'city'" filter="{ 'city': 'text' }">{{rec.city}}</td>
+                    <td style="text-align: right !important" data-title="'Total Amount (Rs.)'" sortable="'total_amount'" filter="{ 'total_amount': 'text' }">{{rec.total_amount}}</td>
+                    <td style="text-align: right !important" data-title="'Balance Amount (Rs.)'" sortable="'balance_amount'" filter="{ 'balance_amount': 'text' }">{{rec.balance_amount}}</td>
+                    <!-- <td style="text-align: right !important"><input type="checkbox" ng-model="selected.invoices[rec.id]" ng-click="getInvoiceids()" /></td> -->
+                </tr>
+                <tr ng-if="$data.length==0">
+                    <td align="center" colspan="9" style="text-align: center !important">No Invoices Found...</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 pend" ng-if="isInvoices">
+                <div class="card">
+                <div class="header headerborder">
+                    <h2>
+                        Pending Amount <span class="badge bg-cyan badgeright" ng-click="getClose()">Close</span>
+                    </h2>
+                </div>
+                 <div class="body">
+                     <div class="row clearfix">
+                        <div class="col-md-12">
+                        <div class="col-md-6 MARTOP8">
+                            <b>Trader Name : </b> {{disRec.distributor_name}}
+                        </div>
+                        <div class="col-md-4 MARTOP8">
+                            <b>Total Amount: </b> {{disRec.total_amount | INR}}
+                        </div>
+                        <div class="col-md-6 MARTOP8">
+                            <b>Paid Amount : </b> {{(disRec.total_amount-disRec.balance_amount) | INR}}
+                        </div>
+                        <div class="col-md-4 MARTOP8">
+                            <b>Balance Amount : </b> {{disRec.balance_amount | INR}}
+                        </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <br>
+
+                        <div class="table-responsive">
+                            <table width="100%" border="1" rules="all" class="tab8">
+                                <tr>
+                                    <th>Sl.No</th>
+                                    <th>Invoice Date</th>
+                                    <th>Invoice No</th>
+                                    <th>Total Amount</th>
+                                    <th>Paid Amount</th>
+                                    <th>Balance Amount</th>
+                                    <th>Invoice Refered By</th>
+                                    <th>Created BY</th>
+                                    <th>Updated BY</th>
+                                    <th>Last Payment</th>
+                                </tr>
+                                <tr ng-repeat="invoice in invoices" ng-if="invoices!=0">
+                                    <td>{{$index+1}}.</td>
+                                    <td align="center">{{invoice.invoice_date}}</td>
+                                    <td align="center">{{invoice.invoice_number}}</td>
+                                    <td align="right">{{invoice.total_amount | INR}}</td>
+                                    <td align="right">{{(invoice.total_amount-invoice.balance_amount) | INR}}</td>
+                                    <td align="right">{{invoice.balance_amount | INR}}</td>
+                                    <th>{{invoice.agent_name}}</th>
+                                    <th>{{invoice.created_by}}</th>
+                                    <th>{{invoice.updated_by}}</th>
+                                    <th>{{invoice.updated_date_time}}</th>
+                                </tr>
+                                <tr ng-if="invoices==0">
+                                    <td align="center" colspan="10" style="text-align: center !important">No History Found...</td>
+                                </tr>
+                            </table>
+                        </div>
+                     </div>
+                 </div>
+                </div>
+            </div>
+    </div>
+                    </div>
+                </div>
+                <!-- #END# Task Info -->
+            </div>
+        </div>
+    </section>

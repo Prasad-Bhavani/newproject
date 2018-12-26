@@ -1,0 +1,37 @@
+<section class="content">
+    <div class="container-fluid">
+        <!-- REPORTS List -->
+        <div class="row clearfix fade-element-in">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                <div class="header headerborder">
+                    <h2>
+                        Import Invoices
+                    </h2>
+                </div>
+                 <div class="table-responsive" style="padding: 10px">
+                    <form  action="import_invoices.php" method="post" class="col-md-offset-3" enctype="multipart/form-data" target="_blank" onsubmit="uploadExcel(this)">
+                     <div class="col-sm-12">
+                        <label class="col-lg-2 control-label upl" for="title">Upload</label>
+    <div class="form-group">
+      <div class="col-lg-4">
+        <input type="file" class="form-control" name="file" id="file" required />
+      </div>
+    </div>
+    <p>Sample Template, <a href="template.xlsx" download style="color: blue !important">click here to Download</a> for Import Invoices</p>
+    <!-- End .form-group  -->
+    <div class="form-group">
+      <div class="col-lg-offset-2">
+        <input type="submit" class="btn btn-success marginR12" value="Submit" name="sub" id="sub" />
+        <input type="button" class="btn btn-danger marginR12" value="Cancel" name="clear" id="clearBtn" />
+      </div>
+    </div>
+                    </div>
+                 </div>
+                </div>
+            </div>
+        </div>
+        <!-- REPORTS List -->
+        <!-- Body Content -->
+    </div>
+</section>

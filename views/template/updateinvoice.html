@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style type="text/css">
+        .form-group
+        {
+            margin-top: 20px !important;
+            margin-bottom: 20px !important;
+        }
+    </style>
+</head>
+<body>
+<div class="modal-box w3-animate-zoom">
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="assignbox"><h4>Update Invoice</h4>
+            <div class="assignbody">
+                <form method="post" novalidate name="updateInvoiceForm" id="updateInvoiceForm" ng-submit="subUpdateInvoice(updateInvoiceForm.$valid)">
+                        <div class="col-md-12">
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label labelrt col-sm-5">Trader</label>
+                            <div class="col-sm-7">
+                            <div class="form-line" ng-class="{'error':updateSubmitted && updateInvoiceForm.distributor_name.$error.required}">
+                            <select class="form-control" name="distributor_id" id="distributor_id" ng-disabled="true" ng-model="updateObj.distributor_id" ng-required="true" ng-class="{'input-error': objsubmit && updateInvoiceForm.distributor_id.$error.required}">
+                                <option value="">Select Trader</option>
+                                <option ng-repeat="dis in distributors" value="{{dis.id}}" ng-if="dis.status==1">{{dis.distributor_name}}</option>
+                            </select>
+                            <p ng-if="updateSubmitted && updateInvoiceForm.distributor_name.$error.required" class="haserror">Select Trader Name</p>
+                            </div>
+                        </div>
+                        </div>
+                        </div>
+
+                        <!-- <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label labelrt col-sm-5">City</label>
+                            <div class="col-sm-7">
+                            <div class="form-line" ng-class="{'error':updateSubmitted && updateInvoiceForm.city.$error.required}">
+                                <input type="text" class="form-control" name="city" ng-disabled="true" id="city" ng-model="updateObj.city" ng-required="true" placeholder="Enter City Name" />
+                            </div>
+                            <p ng-if="updateSubmitted && updateInvoiceForm.city.$error.required" class="haserror">Enter Distributor</p>
+                            </div>
+                            <div class="col-sm-2"><span class="badge bg-cyan" style="cursor: pointer" ng-click="addCustomer()">ADD</span></div>
+                        </div>
+                        </div>
+                        <div class="clearfix"></div> -->
+
+                        <!-- <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label labelrt col-sm-5">Mobile Number</label>
+                            <div class="col-sm-7">
+                            <div class="form-line" ng-class="{'error':updateSubmitted && (updateInvoiceForm.mobile_no.$error.required || updateInvoiceForm.mobile_no.$error.pattern)}">
+                                <input type="text" class="form-control" name="mobile_no" ng-disabled="true" id="mobile_no" ng-pattern="/^[0-9]+$/" ng-model="updateObj.mobile_no" ng-required="true" placeholder="Enter Mobile Number" />
+                            </div>
+                            <p ng-if="updateSubmitted && (updateInvoiceForm.mobile_no.$error.required || updateInvoiceForm.mobile_no.$error.pattern)" class="haserror">Enter Mobile Number</p>
+                            </div>
+                        </div>
+                        </div> -->
+
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label labelrt col-sm-5">Quantity</label>
+                            <div class="col-sm-7">
+                            <div class="form-line" ng-class="{'error':updateSubmitted && updateInvoiceForm.quantity.$error.required}">
+                                <input type="text" class="form-control" name="quantity" ng-disabled="true" id="quantity" ng-model="updateObj.quantity" ng-required="true" placeholder="Enter Quantity" />
+                            </div>
+                            <p ng-if="updateSubmitted && updateInvoiceForm.quantity.$error.required" class="haserror">Enter Quantity</p>
+                            </div>
+                            <!-- <div class="col-sm-2"><span class="badge bg-cyan" style="cursor: pointer" ng-click="addCustomer()">ADD</span></div> -->
+                        </div>
+                        </div>
+                        <div class="clearfix"></div>
+
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label labelrt col-sm-5">Invoice Number</label>
+                            <div class="col-sm-7">
+                            <div class="form-line" ng-class="{'error': (updateSubmitted && updateInvoiceForm.invoice_number.$error.required) || (updateSubmitted && updateObj.isExist && updateObj.invoice_number) || (updateSubmitted && updateInvoiceForm.invoice_number.$error.pattern)}">
+                                <input type="text" class="form-control" ng-disabled="true" name="invoice_number" id="invoice_number" ng-model="updateObj.invoice_number" ng-required="true" placeholder="Enter Invoice Number" ng-pattern="/^[a-zA-Z0-9]+$/" />
+                                </div>
+                            <p ng-if="updateSubmitted && updateInvoiceForm.invoice_number.$error.required" class="haserror">Enter Invoice Number</p>
+                            <p ng-if="updateSubmitted && updateInvoiceForm.invoice_number.$error.pattern" class="haserror">Enter Valid Invoice</p>
+                            <p ng-if="updateSubmitted && updateObj.isExist && updateObj.invoice_number" class="haserror">Invoice Number Already Exists</p>
+                            </div>
+                        </div>
+                        </div>
+
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label labelrt col-sm-5">Invoice Date</label>
+                            <div class="col-sm-7">
+                            <div class="form-line" ng-class="{'error':updateSubmitted && updateInvoiceForm.invoice_date.$error.required}">
+                                <input class="form-control" datepicker datepicker-format="dd-MMM-yyyy" name="invoice_date" id="invoice_date" ng-model="updateObj.invoice_date" ng-required="true" ng-readonly="true" placeholder="Select Date" />
+                                </div>
+                            <p ng-if="updateSubmitted && updateInvoiceForm.invoice_date.$error.required" class="haserror">Select Invoice Date</p>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="clearfix"></div>
+
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label labelrt col-sm-5">Total Amount</label>
+                            <div class="col-sm-7">
+                            <div class="form-line" ng-class="{'error':(updateSubmitted && updateInvoiceForm.total_amount.$error.required) || (updateSubmitted && updateInvoiceForm.total_amount.$error.pattern)}">
+                                <input type="number" class="form-control" ng-disabled="true" name="total_amount" id="total_amount" ng-model="updateObj.total_amount" ng-required="true" placeholder="Enter Total Amount" ng-pattern="/^[1-9][0-9]*(\.[0-9]{1,2})?$/" />
+                                </div>
+                            <p ng-if="updateSubmitted && updateInvoiceForm.total_amount.$error.required" class="haserror">Enter Total Amount</p>
+                            <p ng-if="updateSubmitted && updateInvoiceForm.total_amount.$error.pattern" class="haserror">Enter Valid Amount</p>
+                            </div>
+                        </div>
+                        </div>
+
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label labelrt col-sm-5">Balance Amount</label>
+                            <div class="col-sm-7">
+                            <div class="form-line" ng-class="{'error':(updateSubmitted && updateInvoiceForm.balance_amountr.$error.required) || (!updateInvoiceForm.balance_amount.$error.required && !updateInvoiceForm.balance_amount.$valid)}">
+                                <input type="number" class="form-control" ng-disabled="true" name="balance_amount" id="balance_amountr" ng-model="updateObj.balance_amount" ng-required="true" placeholder="Enter Paid Amount" ng-min="0" ng-max="updateObj.total_amount" ng-pattern="/^[0]$|^[1-9][0-9]*(\.[0-9]{1,2})?$/" />
+                                </div>
+                            <p ng-if="updateSubmitted && updateInvoiceForm.balance_amount.$error.required" class="haserror">Enter Balance Amount</p>
+                            <p ng-if="!updateInvoiceForm.balance_amount.$error.required && !updateInvoiceForm.balance_amount.$valid" class="haserror">Enter Valid Amount</p>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="clearfix"></div>
+
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label labelrt col-sm-5">Paid Amount</label>
+                            <div class="col-sm-7">
+                            <div class="form-line" ng-class="{'error':(updateSubmitted && updateInvoiceForm.paid_amount.$error.required) || (!updateInvoiceForm.paid_amount.$error.required && !updateInvoiceForm.paid_amount.$valid)}">
+                                <input type="number" class="form-control" name="paid_amount" id="paid_amount" ng-model="updateObj.paid_amount" ng-required="true" placeholder="Enter Paid Amount" ng-pattern="/^[1-9][0-9]*(\.[0-9]{1,2})?$/" ng-min="0" ng-max="updateObj.balance_amount" />
+                                </div>
+                            <p ng-if="updateSubmitted && updateInvoiceForm.paid_amount.$error.required" class="haserror">Enter Paid Amount</p>
+                            <p ng-if="!updateInvoiceForm.paid_amount.$error.required && !updateInvoiceForm.paid_amount.$valid" class="haserror">Enter Valid Amount</p>
+                            </div>
+                        </div>
+                        </div>
+
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label labelrt col-sm-5">Paid Date</label>
+                            <div class="col-sm-7">
+                            <div class="form-line" ng-class="{'error':updateSubmitted && updateInvoiceForm.paid_date.$error.required}">
+                                <input class="form-control" datepicker datepicker-format="dd-MMM-yyyy" name="paid_date" id="paid_date" ng-model="updateObj.paid_date" ng-required="true" ng-readonly="true" placeholder="Select Date" />
+                                </div>
+                            <p ng-if="updateSubmitted && updateInvoiceForm.paid_date.$error.required" class="haserror">Select Paid Date</p>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="clearfix"></div>
+
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label labelrt col-sm-5">Payment Type</label>
+                            <div class="col-sm-7">
+                            <div class="form-line" ng-class="{'error':updateSubmitted && updateInvoiceForm.payment_type.$error.required}">
+                                <select class="form-control" name="payment_type" id="payment_type" ng-model="updateObj.payment_type" ng-required="true">
+                                    <option value="">Select</option>
+                                    <option>Cash</option>
+                                    <option>Cheque</option>
+                                    <option>NEFT</option>
+                                </select>
+                                </div>
+                            <p ng-if="updateSubmitted && updateInvoiceForm.payment_type.$error.required" class="haserror">Select Payment Date</p>
+                            </div>
+                        </div>
+                        </div>
+
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label labelrt col-sm-5">Remarks</label>
+                            <div class="col-sm-7">
+                            <div class="form-line" ng-class="{'error':updateSubmitted && updateInvoiceForm.remarks.$error.required}">
+                                <textarea class="form-control" name="remarks" id="remarks" ng-required="true" ng-model="updateObj.remarks" placeholder="Enter Remarks"></textarea>
+                                </div>
+                            <p ng-if="updateSubmitted && updateInvoiceForm.remarks.$error.required" class="haserror">Enter Remarks</p>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="clearfix"></div>
+
+                         <div class="col-sm-12">
+                            <div class="form-group">
+                                <div class="col-sm-offset-4">
+                                    <button type="submit" class="btn btn-primary">Update</button>
+                                    <button type="button" class="btn btn-danger modal-close" ng-click="closeThisDialog(0)">Cancel</button>
+                                </div>
+                            </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+</body>
+</html>

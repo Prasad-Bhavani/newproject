@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style type="text/css">
+        .form-group
+        {
+            margin-top: 20px !important;
+            margin-bottom: 20px !important;
+        }
+    </style>
+</head>
+<body>
+<div class="modal-box w3-animate-zoom">
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="assignbox"><h4>Edit Invoice</h4>
+            <div class="assignbody">
+                <form method="post" novalidate name="editInvoiceForm" id="editInvoiceForm" ng-submit="subEditInvoice(editInvoiceForm.$valid)">
+                        <div class="col-md-12">
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label labelrt col-sm-5">Trader</label>
+                            <div class="col-sm-7">
+                            <div class="form-line" ng-class="{'error':editSubmitted && editInvoiceForm.distributor_name.$error.required}">
+                                <input type="text" class="form-control" name="distributor_name" id="distributor_name" ng-model="editObj.distributor_name" ng-required="true" placeholder="Enter Distributor Name" />
+                            </div>
+                            <p ng-if="editSubmitted && editInvoiceForm.distributor_name.$error.required" class="haserror">Enter Trader Name</p>
+                            </div>
+                        </div>
+                        </div>
+
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label labelrt col-sm-5">City</label>
+                            <div class="col-sm-7">
+                            <div class="form-line" ng-class="{'error':editSubmitted && editInvoiceForm.city.$error.required}">
+                                <input type="text" class="form-control" name="city" id="city" ng-model="editObj.city" ng-required="true" placeholder="Enter City Name" />
+                            </div>
+                            <p ng-if="editSubmitted && editInvoiceForm.city.$error.required" class="haserror">Enter Trader</p>
+                            </div>
+                            <!-- <div class="col-sm-2"><span class="badge bg-cyan" style="cursor: pointer" ng-click="addCustomer()">ADD</span></div> -->
+                        </div>
+                        </div>
+                        <div class="clearfix"></div>
+
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label labelrt col-sm-5">Mobile Number</label>
+                            <div class="col-sm-7">
+                            <div class="form-line" ng-class="{'error':editSubmitted && (editInvoiceForm.mobile_no.$error.required || editInvoiceForm.mobile_no.$error.pattern)}">
+                                <input type="text" class="form-control" name="mobile_no" id="mobile_no" ng-pattern="/^[0-9]+$/" ng-model="editObj.mobile_no" ng-required="true" placeholder="Enter Mobile Number" />
+                            </div>
+                            <p ng-if="editSubmitted && (editInvoiceForm.mobile_no.$error.required || editInvoiceForm.mobile_no.$error.pattern)" class="haserror">Enter Mobile Number</p>
+                            </div>
+                        </div>
+                        </div>
+
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label labelrt col-sm-5">Quantity</label>
+                            <div class="col-sm-7">
+                            <div class="form-line" ng-class="{'error':editSubmitted && editInvoiceForm.quantity.$error.required}">
+                                <input type="text" class="form-control" name="quantity" id="quantity" ng-model="editObj.quantity" ng-required="true" placeholder="Enter Quantity" />
+                            </div>
+                            <p ng-if="editSubmitted && editInvoiceForm.quantity.$error.required" class="haserror">Enter Quantity</p>
+                            </div>
+                            <!-- <div class="col-sm-2"><span class="badge bg-cyan" style="cursor: pointer" ng-click="addCustomer()">ADD</span></div> -->
+                        </div>
+                        </div>
+                        <div class="clearfix"></div>
+
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label labelrt col-sm-5">Invoice Number</label>
+                            <div class="col-sm-7">
+                            <div class="form-line" ng-class="{'error': (editSubmitted && editInvoiceForm.invoice_number.$error.required) || (editSubmitted && editObj.isExist && editObj.invoice_number) || (editSubmitted && editInvoiceForm.invoice_number.$error.pattern)}">
+                                <input type="text" class="form-control" name="invoice_number" id="invoice_number" ng-model="editObj.invoice_number" ng-required="true" placeholder="Enter Invoice Number" ng-pattern="/^[a-zA-Z0-9]+$/" />
+                                </div>
+                            <p ng-if="editSubmitted && editInvoiceForm.invoice_number.$error.required" class="haserror">Enter Invoice Number</p>
+                            <p ng-if="editSubmitted && editInvoiceForm.invoice_number.$error.pattern" class="haserror">Enter Valid Invoice</p>
+                            <p ng-if="editSubmitted && editObj.isExist && editObj.invoice_number" class="haserror">Invoice Number Already Exists</p>
+                            </div>
+                        </div>
+                        </div>
+
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label labelrt col-sm-5">Invoice Date</label>
+                            <div class="col-sm-7">
+                            <div class="form-line" ng-class="{'error':editSubmitted && editInvoiceForm.invoice_date.$error.required}">
+                                <input class="form-control" datepicker datepicker-format="dd-MMM-yyyy" name="invoice_date" id="invoice_date" ng-model="editObj.invoice_date" ng-required="true" ng-readonly="true" placeholder="Select Date" />
+                                </div>
+                            <p ng-if="editSubmitted && editInvoiceForm.invoice_date.$error.required" class="haserror">Select Invoice Date</p>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="clearfix"></div>
+
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label labelrt col-sm-5">Total Amount</label>
+                            <div class="col-sm-7">
+                            <div class="form-line" ng-class="{'error':(editSubmitted && editInvoiceForm.total_amount.$error.required) || (editSubmitted && editInvoiceForm.total_amount.$error.pattern)}">
+                                <input type="number" class="form-control" name="total_amount" id="total_amount" ng-model="editObj.total_amount" ng-required="true" placeholder="Enter Total Amount" ng-pattern="/^[1-9][0-9]*(\.[0-9]{1,2})?$/" />
+                                </div>
+                            <p ng-if="editSubmitted && editInvoiceForm.total_amount.$error.required" class="haserror">Enter Total Amount</p>
+                            <p ng-if="editSubmitted && editInvoiceForm.total_amount.$error.pattern" class="haserror">Enter Valid Amount</p>
+                            </div>
+                        </div>
+                        </div>
+
+                        <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label labelrt col-sm-5">Balance Amount</label>
+                            <div class="col-sm-7">
+                            <div class="form-line" ng-class="{'error':(editSubmitted && editInvoiceForm.balance_amountr.$error.required) || (!editInvoiceForm.balance_amount.$error.required && !editInvoiceForm.balance_amount.$valid)}">
+                                <input type="number" class="form-control" name="balance_amount" id="balance_amountr" ng-model="editObj.balance_amount" ng-required="true" placeholder="Enter Paid Amount" ng-min="0" ng-max="editObj.total_amount" ng-pattern="/^[0]$|^[1-9][0-9]*(\.[0-9]{1,2})?$/" />
+                                </div>
+                            <p ng-if="editSubmitted && editInvoiceForm.balance_amount.$error.required" class="haserror">Enter Balance Amount</p>
+                            <p ng-if="!editInvoiceForm.balance_amount.$error.required && !editInvoiceForm.balance_amount.$valid" class="haserror">Enter Valid Amount</p>
+                            </div>
+                        </div>
+                        </div>
+                        <div class="clearfix"></div>
+
+                        <!-- <div class="col-md-12 col-md-offset-1">
+                        <div class="form-group">
+                            <label class="form-label labelrt col-sm-3">Remarks</label>
+                            <div class="col-sm-4">
+                            <div class="form-line" ng-class="{'error':editSubmitted && editInvoiceForm.remarks.$error.required}">
+                                <textarea class="form-control" name="remarks" id="remarks" ng-model="editObj.remarks" placeholder="Enter Remarks"></textarea>
+                                </div>
+                            <p ng-if="editSubmitted && editInvoiceForm.remarks.$error.required" class="haserror">Enter Remarks</p>
+                            </div>
+                        </div>
+                        </div> -->
+                        <div class="clearfix"></div>
+
+                         <div class="col-sm-12">
+                            <div class="form-group">
+                                <div class="col-sm-offset-4">
+                                    <button type="submit" class="btn btn-primary">Edit</button>
+                                    <button type="button" class="btn btn-danger modal-close" ng-click="closeThisDialog(0)">Cancel</button>
+                                </div>
+                            </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+</body>
+</html>
